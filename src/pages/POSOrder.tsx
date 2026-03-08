@@ -339,7 +339,7 @@ export function POSOrder({
               </div>
             }
             <div className="flex justify-between text-slate-600 dark:text-slate-400">
-              <span>Tax (10%)</span>
+              <span>Service Charge (10%)</span>
               <span>{formatCurrency(tax)}</span>
             </div>
             <div className="flex justify-between text-xl font-bold text-slate-900 dark:text-white pt-2 border-t border-gray-200 dark:border-slate-700">

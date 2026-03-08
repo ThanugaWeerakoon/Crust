@@ -109,7 +109,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
               </div>
             }
             <div className="flex justify-between mb-2">
-              <span>Tax (10%)</span>
+              <span>Service Charge (10%)</span>
               <span>{formatCurrency(order.tax)}</span>
             </div>
             <div className="flex justify-between text-lg font-bold border-t border-gray-800 pt-2 mt-2">

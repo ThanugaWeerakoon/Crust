@@ -94,6 +94,21 @@ export function App() {
 
 
         <main className="flex-1 overflow-y-auto">{renderPage()}</main>
+        <footer className="text-center text-xs py-3 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-500">
+  <div className="flex flex-col items-center gap-1">
+    <span className="font-semibold">
+      Powered by LegionCode IT Solutions
+    </span>
+    <a
+      href="https://www.legioncodeitsolutions.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-500 hover:underline"
+    >
+      www.legioncodeitsolutions.com
+    </a>
+  </div>
+</footer>
       </div>
     </div>);
 

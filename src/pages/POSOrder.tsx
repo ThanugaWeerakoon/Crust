@@ -334,7 +334,7 @@ export function POSOrder({
               </div>
             }
             <div className="flex justify-between text-slate-600 dark:text-slate-400">
-              <span>Tax (10%)</span>
+              <span>Service Charge (10%)</span>
               <span>{formatCurrency(tax)}</span>
             </div>
             <div className="flex justify-between text-xl font-bold text-slate-900 dark:text-white pt-2 border-t border-gray-200 dark:border-slate-700">
@@ -345,7 +345,7 @@ export function POSOrder({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 gap-2">
             <button
               onClick={() => handleCheckout('Cash')}
               disabled={cart.length === 0}
@@ -354,8 +354,22 @@ export function POSOrder({
               <BanknoteIcon className="h-5 w-5" />
               <span>Checkout</span>
             </button>
+            {/* <button
+              onClick={() => handleCheckout('Card')}
+              disabled={cart.length === 0}
+              className="flex flex-col items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]">
 
-           
+              <CreditCardIcon className="h-5 w-5" />
+              <span>Card</span>
+            </button> */}
+            {/* <button
+              onClick={() => handleCheckout('Online')}
+              disabled={cart.length === 0}
+              className="flex flex-col items-center justify-center gap-1 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]">
+
+              <SmartphoneIcon className="h-5 w-5" />
+              <span>Online</span>
+            </button> */}
           </div>
         </div>
       </div>

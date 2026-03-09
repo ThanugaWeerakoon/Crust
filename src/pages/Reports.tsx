@@ -19,57 +19,47 @@ interface ReportsProps {
 export function Reports({ orders }: ReportsProps) {
   const [dateRange, setDateRange] = useState('This Week');
   // Mock data for charts
-  const categoryData = [
-  {
-    name: 'Pizza',
-    value: 450000
-  },
-  {
-    name: 'Burgers',
-    value: 280000
-  },
-  {
-    name: 'Pasta',
-    value: 150000
-  },
-  {
-    name: 'Drinks',
-    value: 120000
-  },
-  {
-    name: 'Desserts',
-    value: 90000
-  }];
+  const categorySales: Record<string, number> = {};
 
-  const hourlyData = [
-  {
-    time: '10 AM',
-    orders: 12
-  },
-  {
-    time: '12 PM',
-    orders: 45
-  },
-  {
-    time: '2 PM',
-    orders: 38
-  },
-  {
-    time: '4 PM',
-    orders: 20
-  },
-  {
-    time: '6 PM',
-    orders: 65
-  },
-  {
-    time: '8 PM',
-    orders: 85
-  },
-  {
-    time: '10 PM',
-    orders: 30
-  }];
+orders.forEach((order) => {
+  if (order.status === "Refunded") return;
+
+  order.items.forEach((item) => {
+    const category = item.category || "Other";
+
+    if (!categorySales[category]) {
+      categorySales[category] = 0;
+    }
+
+    categorySales[category] += item.price * item.quantity;
+  });
+});
+
+const categoryData = Object.entries(categorySales).map(([name, value]) => ({
+  name,
+  value
+}));
+
+const hourlyMap: Record<number, number> = {};
+
+orders.forEach((order) => {
+  if (order.status === "Refunded") return;
+
+  const hour = new Date(order.date).getHours();
+
+  if (!hourlyMap[hour]) {
+    hourlyMap[hour] = 0;
+  }
+
+  hourlyMap[hour] += 1;
+});
+
+const hourlyData = Object.entries(hourlyMap)
+  .sort((a, b) => Number(a[0]) - Number(b[0]))
+  .map(([hour, count]) => ({
+    time: `${hour}:00`,
+    orders: count
+  }));
 
   const COLORS = ['#f59e0b', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444'];
   const formatCurrency = (amount: number) =>

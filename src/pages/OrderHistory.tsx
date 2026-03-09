@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Order } from '../types';
-import { SearchIcon, PrinterIcon, AlertTriangleIcon } from 'lucide-react';
+import { SearchIcon, PrinterIcon } from 'lucide-react';
 import { Receipt } from '../components/ui/Receipt';
 interface OrderHistoryProps {
   orders: Order[];
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
 }
-export function OrderHistory({ orders, setOrders }: OrderHistoryProps) {
+export function OrderHistory({ orders }: OrderHistoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<
     'All' | 'Completed' | 'Refunded'>(
@@ -24,24 +24,10 @@ export function OrderHistory({ orders, setOrders }: OrderHistoryProps) {
   `LKR ${amount.toLocaleString('en-LK', {
     minimumFractionDigits: 2
   })}`;
-  const handleRefund = (id: string) => {
-    if (
-    confirm(
-      'Are you sure you want to refund this order? This action cannot be undone.'
-    ))
-    {
-      setOrders((prev) =>
-      prev.map((o) =>
-      o.id === id ?
-      {
-        ...o,
-        status: 'Refunded'
-      } :
-      o
-      )
-      );
-    }
-  };
+
+
+
+
   return (
     <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -122,15 +108,7 @@ export function OrderHistory({ orders, setOrders }: OrderHistoryProps) {
 
                       <PrinterIcon className="h-4 w-4" />
                     </button>
-                    {order.status === 'Completed' &&
-                  <button
-                    onClick={() => handleRefund(order.id)}
-                    className="p-2 text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10 rounded-lg transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
-                    title="Refund Order">
-
-                        <AlertTriangleIcon className="h-4 w-4" />
-                      </button>
-                  }
+                   
                   </td>
                 </tr>
               )}

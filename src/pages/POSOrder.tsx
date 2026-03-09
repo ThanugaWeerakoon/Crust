@@ -1,14 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import  { useMemo, useState } from 'react';
 import { MenuItem, CartItem, Category, Discount, Order } from '../types';
 import {
   SearchIcon,
   PlusIcon,
   MinusIcon,
   TrashIcon,
-  UtensilsIcon,
-  CreditCardIcon,
+  UtensilsIcon,  
   BanknoteIcon,
-  SmartphoneIcon,
   ShoppingCartIcon } from
 'lucide-react';
 import { Receipt } from '../components/ui/Receipt';
@@ -32,14 +30,11 @@ export function POSOrder({
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const categories: (Category | 'All')[] = [
   'All',
-  'Pizza',
-  'Cocktails',
   'Mocktails',
   'Smoothies',
-  'Milkshakes',
-  'Juices',
-  'Soft Drinks',
-  'Desserts'
+  'Juice',
+  'Milkshake',
+  'Soft Drinks'
   ];
 
   const filteredItems = useMemo(() => {
@@ -354,27 +349,13 @@ export function POSOrder({
             <button
               onClick={() => handleCheckout('Cash')}
               disabled={cart.length === 0}
-              className="flex flex-col items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]">
+              className=" flex flex-col items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]">
 
               <BanknoteIcon className="h-5 w-5" />
-              <span>Cash</span>
+              <span>Checkout</span>
             </button>
-            <button
-              onClick={() => handleCheckout('Card')}
-              disabled={cart.length === 0}
-              className="flex flex-col items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]">
 
-              <CreditCardIcon className="h-5 w-5" />
-              <span>Card</span>
-            </button>
-            <button
-              onClick={() => handleCheckout('Online')}
-              disabled={cart.length === 0}
-              className="flex flex-col items-center justify-center gap-1 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]">
-
-              <SmartphoneIcon className="h-5 w-5" />
-              <span>Online</span>
-            </button>
+           
           </div>
         </div>
       </div>

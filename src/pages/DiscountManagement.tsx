@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Discount } from '../types';
 import { PlusIcon, EditIcon, TrashIcon, TagIcon, XIcon } from 'lucide-react';
 interface DiscountManagementProps {

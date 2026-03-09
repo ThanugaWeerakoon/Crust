@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Order } from '../types';
 import {
   BanknoteIcon,
@@ -23,6 +23,7 @@ export function Dashboard({ orders }: DashboardProps) {
   const todaysOrders = orders.filter(
     (o) => o.date.startsWith(today) && o.status !== 'Refunded'
   );
+  
   const totalSalesToday = todaysOrders.reduce((sum, o) => sum + o.total, 0);
   const activeTables = new Set(
     todaysOrders.
@@ -35,36 +36,8 @@ export function Dashboard({ orders }: DashboardProps) {
   `LKR ${amount.toLocaleString('en-LK', {
     maximumFractionDigits: 0
   })}`;
-  // Mock chart data
-  const chartData = [
-  {
-    name: 'Mon',
-    sales: 45000
-  },
-  {
-    name: 'Tue',
-    sales: 52000
-  },
-  {
-    name: 'Wed',
-    sales: 38000
-  },
-  {
-    name: 'Thu',
-    sales: 65000
-  },
-  {
-    name: 'Fri',
-    sales: 85000
-  },
-  {
-    name: 'Sat',
-    sales: 110000
-  },
-  {
-    name: 'Sun',
-    sales: 95000
-  }];
+
+  
 
   // Calculate best selling items
   const itemSales: Record<
@@ -121,6 +94,27 @@ export function Dashboard({ orders }: DashboardProps) {
     color: 'text-purple-500',
     bg: 'bg-purple-100 dark:bg-purple-500/10'
   }];
+
+
+const chartData = Array.from({ length: 7 }).map((_, index) => {
+  const date = new Date();
+  date.setDate(date.getDate() - (6 - index));
+
+  const dateStr = date.toISOString().split("T")[0];
+
+  const sales = orders
+    .filter(
+      (o) =>
+        o.date.startsWith(dateStr) &&
+        o.status !== "Refunded"
+    )
+    .reduce((sum, o) => sum + o.total, 0);
+
+  return {
+    name: date.toLocaleDateString("en-US", { weekday: "short" }),
+    sales
+  };
+});
 
   return (
     <div className="p-4 lg:p-8 space-y-6 max-w-7xl mx-auto">

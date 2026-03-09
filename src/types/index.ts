@@ -1,4 +1,4 @@
-export type Category = 'Pizza' | 'Burgers' | 'Pasta' | 'Drinks' | 'Desserts';
+export type Category = 'Mocktails' | 'Smoothies' | 'Milkshake' | 'Juice' | 'Soft Drinks';
 
 export interface MenuItem {
   id: string;
@@ -18,6 +18,7 @@ export interface CartItem extends MenuItem {
 
 export interface Order {
   id: string;
+  firestoreId?: string;
   items: CartItem[];
   subtotal: number;
   tax: number;

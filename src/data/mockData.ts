@@ -142,7 +142,7 @@ export const mockMenuItems: MenuItem[] = [
 export const mockStaff: Staff[] = [
 {
   id: 's1',
-  name: 'Kamal Perera',
+  name: 'Chamod',
   role: 'Admin',
   email: 'kamal@crust.com',
   phone: '0771234567',
@@ -156,22 +156,7 @@ export const mockStaff: Staff[] = [
   phone: '0719876543',
   status: 'Active'
 },
-{
-  id: 's3',
-  name: 'Ruwan Fernando',
-  role: 'Cashier',
-  email: 'ruwan@crust.com',
-  phone: '0765554443',
-  status: 'Active'
-},
-{
-  id: 's4',
-  name: 'Sanduni Peiris',
-  role: 'Cashier',
-  email: 'sanduni@crust.com',
-  phone: '0723332221',
-  status: 'Inactive'
-}];
+];
 
 
 export const mockDiscounts: Discount[] = [

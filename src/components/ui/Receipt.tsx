@@ -7,52 +7,8 @@ interface ReceiptProps {
 }
 export function Receipt({ order, onClose }: ReceiptProps) {
   const handlePrint = () => {
-  const printContent = document.getElementById("printable-receipt");
-
-  if (!printContent) return;
-
-  const printWindow = window.open("", "", "width=400,height=600");
-
-  if (!printWindow) return;
-
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Receipt</title>
-        <style>
-          body{
-            font-family: Arial, sans-serif;
-            padding:20px;
-            margin:0;
-          }
-          table{
-            width:100%;
-            border-collapse: collapse;
-          }
-          th, td{
-            padding:4px 0;
-            font-size:14px;
-          }
-          th{
-            text-align:left;
-          }
-          td:last-child, th:last-child{
-            text-align:right;
-          }
-        </style>
-      </head>
-      <body>
-        ${printContent.innerHTML}
-      </body>
-    </html>
-  `);
-
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
-  printWindow.close();
-};
-
+    window.print();
+  };
   const formatCurrency = (amount: number) => {
     return `LKR ${amount.toLocaleString('en-LK', {
       minimumFractionDigits: 2

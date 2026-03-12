@@ -148,3 +148,4 @@ export function Receipt({ order, onClose }: ReceiptProps) {
     </div>);
 
 }
+

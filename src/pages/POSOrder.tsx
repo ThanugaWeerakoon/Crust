@@ -29,12 +29,22 @@ export function POSOrder({
   const [notes, setNotes] = useState('');
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const categories: (Category | 'All')[] = [
-  'All',
-  'Mocktails',
-  'Smoothies',
-  'Juice',
-  'Milkshake',
-  'Soft Drinks'
+   "All",
+    "Mocktails",
+    "Smoothies",
+    "Milkshake",
+    "Juice",
+    "Soft Drinks",
+    "The Classics",
+    "Wines",
+    "Beer",
+    "Pizza",
+    "Add Ons",
+    "Tacos",
+    "From the Grill",
+    "To Share",
+    "Salads",
+    "Sweets"
   ];
 
   const filteredItems = useMemo(() => {

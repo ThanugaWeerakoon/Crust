@@ -309,7 +309,7 @@ export function POSOrder({
           <button
             onClick={() => handleCheckout('Cash')}
             disabled={cart.length === 0}
-            className="flex flex-col items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]"
+            className="flex  w-full items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]"
           >
             <BanknoteIcon className="h-5 w-5" />
             <span>Checkout</span>

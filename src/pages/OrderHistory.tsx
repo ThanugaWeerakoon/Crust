@@ -60,7 +60,7 @@ const navigate = useNavigate();
         </div>
 
         <div className="flex gap-2">
-          {['All', 'Completed', 'Refunded'].map((status) =>
+          {['All', 'Completed', 'Pending'].map((status) =>
           <button
             key={status}
             onClick={() => setStatusFilter(status as any)}

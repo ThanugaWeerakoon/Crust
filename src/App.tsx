@@ -1,10 +1,9 @@
-import { useState } from 'react';
-import { useTheme } from './hooks/useTheme';
+import { useState, useEffect } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { db } from "../firebase";
-import { collection, getDocs , addDoc } from "firebase/firestore";
-import { useEffect } from "react";
+import { collection, getDocs, addDoc, updateDoc ,doc } from "firebase/firestore";
+
 // Pages
 import { Dashboard } from './pages/Dashboard';
 import { POSOrder } from './pages/POSOrder';
@@ -13,6 +12,9 @@ import { DiscountManagement } from './pages/DiscountManagement';
 import { Reports } from './pages/Reports';
 import { StaffManagement } from './pages/StaffManagement';
 import { OrderHistory } from './pages/OrderHistory';
+
+// Hooks
+import { useTheme } from './hooks/useTheme';
 
 // Types
 import { MenuItem, Order, Staff, Discount } from './types';
@@ -24,101 +26,123 @@ export function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Data State (initialize as empty arrays)
+  // Data State
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
 
- const handlePlaceOrder = async (newOrder: Order) => {
-  try {
-    const docRef = await addDoc(collection(db, "orders"), newOrder);
-
-    const savedOrder = {
-      ...newOrder,
-      id: docRef.id
+  // -------------------------------
+  // Firestore: Load Menu Items
+  // -------------------------------
+  useEffect(() => {
+    const loadMenuItems = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "menus"));
+        const items: MenuItem[] = snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          ...(docSnap.data() as Omit<MenuItem, "id">)
+        }));
+        setMenuItems(items);
+      } catch (error) {
+        console.error("Error loading menu items:", error);
+      }
     };
+    loadMenuItems();
+  }, []);
 
-    setOrders((prev) => [savedOrder, ...prev]);
+  // -------------------------------
+  // Firestore: Load Orders
+  // -------------------------------
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "orders"));
+        const loadedOrders: Order[] = snapshot.docs.map(doc => ({
+          firestoreId: doc.id,
+          id: doc.data().id || doc.id,
+          ...(doc.data() as Omit<Order, "id" | "firestoreId">)
+        }));
+        setOrders(loadedOrders);
+      } catch (error) {
+        console.error("Error loading orders:", error);
+      }
+    };
+    loadOrders();
+  }, []);
 
-  } catch (error) {
-    console.error("Error saving order:", error);
-  }
-};
+  // -------------------------------
+  // Place or Edit Order Handler
+  // -------------------------------
+  const handlePlaceOrder = async (newOrder: Omit<Order, "firestoreId">, existingFirestoreId?: string) => {
+    try {
+      if (existingFirestoreId) {
+        // Updating existing order
+        await updateDoc(doc(db, "orders", existingFirestoreId),
+          newOrder
+        );
 
+        setOrders(prev =>
+          prev.map(o =>
+            o.firestoreId === existingFirestoreId ? { ...o, ...newOrder } : o
+          )
+        );
+        setEditingOrder(null);
+      } else {
+        // Adding new order
+        const docRef = await addDoc(collection(db, "orders"), newOrder);
+        setOrders(prev => [{ ...newOrder, firestoreId: docRef.id }, ...prev]);
+      }
+    } catch (error) {
+      console.error("Error saving order:", error);
+    }
+  };
+
+  // -------------------------------
+  // Edit Order from OrderHistory
+  // -------------------------------
+  const handleEditOrder = (order: Order) => {
+    setEditingOrder(order);
+    setCurrentPage('pos'); // Navigate to POSOrder
+  };
+
+  // -------------------------------
+  // Page Rendering
+  // -------------------------------
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard':
         return <Dashboard orders={orders} />;
-
       case 'pos':
         return (
           <POSOrder
             menuItems={menuItems}
             discounts={discounts}
             onPlaceOrder={handlePlaceOrder}
+            editingOrder={editingOrder}
           />
         );
-
       case 'history':
-        return <OrderHistory orders={orders} setOrders={setOrders} />;
-
+        return (
+          <OrderHistory
+            orders={orders}
+            setOrders={setOrders}
+            onEditOrder={handleEditOrder}
+          />
+        );
       case 'menu':
         return <MenuManagement menuItems={menuItems} setMenuItems={setMenuItems} />;
-
       case 'discounts':
         return <DiscountManagement discounts={discounts} setDiscounts={setDiscounts} />;
-
       case 'reports':
         return <Reports orders={orders} />;
-
       case 'staff':
         return <StaffManagement staff={staff} setStaff={setStaff} />;
-
       default:
         return <Dashboard orders={orders} />;
     }
   };
-
-      useEffect(() => {
-        const loadMenuItems = async () => {
-          try {
-            const snapshot = await getDocs(collection(db, "menus"));
-
-            const items: MenuItem[] = snapshot.docs.map((docSnap) => ({
-              id: docSnap.id,
-              ...(docSnap.data() as Omit<MenuItem, "id">)
-            }));
-
-            setMenuItems(items);
-
-          } catch (error) {
-            console.error("Error loading menu items:", error);
-          }
-        };
-
-        loadMenuItems();
-      }, []);
-
-      useEffect(() => {
-  const loadOrders = async () => {
-    try {
-      const snapshot = await getDocs(collection(db, "orders"));
-
-      const loadedOrders: Order[] = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Omit<Order, "id">)
-      }));
-
-      setOrders(loadedOrders);
-
-    } catch (error) {
-      console.error("Error loading orders:", error);
-    }
-  };
-
-  loadOrders();
-}, []);
 
   const getPageTitle = () => {
     const titles: Record<string, string> = {
@@ -135,6 +159,7 @@ export function App() {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-900 overflow-hidden font-sans">
+      {/* Sidebar */}
       <Sidebar
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
@@ -143,6 +168,7 @@ export function App() {
       />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Header */}
         <Header
           title={getPageTitle()}
           isDark={isDark}
@@ -150,22 +176,23 @@ export function App() {
           onMenuClick={() => setIsMobileMenuOpen(true)}
         />
 
+        {/* Main Content */}
         <main className="flex-1 overflow-y-auto">{renderPage()}</main>
+
+        {/* Footer */}
         <footer className="text-center text-xs py-3 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-500">
-  <div className="flex flex-col items-center gap-1">
-    <span className="font-semibold">
-      Powered by LegionCode IT Solutions
-    </span>
-    <a
-      href="https://www.legioncodeitsolutions.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-500 hover:underline"
-    >
-      www.legioncodeitsolutions.com
-    </a>
-  </div>
-</footer>
+          <div className="flex flex-col items-center gap-1">
+            <span className="font-semibold">Powered by LegionCode IT Solutions</span>
+            <a
+              href="https://www.legioncodeitsolutions.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              www.legioncodeitsolutions.com
+            </a>
+          </div>
+        </footer>
       </div>
     </div>
   );

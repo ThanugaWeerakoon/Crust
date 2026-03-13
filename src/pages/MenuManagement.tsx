@@ -142,25 +142,17 @@ export default function MenuManagement({
   };
 
   try {
-    if (editingId) {
-      await updateDoc(doc(db, "menus", editingId), itemData);
+ if (editingId) {
+  await updateDoc(doc(db, "menus", editingId), itemData);
 
-      setMenuItems((prev: MenuItem[]) =>
-        prev.map((item) =>
-          item.id === editingId ? { ...item, ...itemData } : item
-        )
-      );
-
-    } else {
-      const docRef = await addDoc(collection(db, "menus"), itemData);
-
-      const newItem: MenuItem = {
-        id: docRef.id,
-        ...itemData
-      };
-
-      setMenuItems((prev: MenuItem[]) => [...prev, newItem]);
-    }
+  setMenuItems(prev =>
+    prev.map(item => item.id === editingId ? { ...item, ...itemData } : item)
+  );
+} else {
+  const docRef = await addDoc(collection(db, "menus"), itemData);
+  const newItem: MenuItem = { id: docRef.id, ...itemData };
+  setMenuItems(prev => [...prev, newItem]);
+}
 
     setIsModalOpen(false);
     setForm(emptyForm);

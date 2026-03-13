@@ -4,19 +4,25 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
 import { Order } from '../types';
 import { SearchIcon, PrinterIcon } from 'lucide-react';
 import { Receipt } from '../components/ui/Receipt';
+
+
 interface OrderHistoryProps {
   orders: Order[];
-  setOrders: React.Dispatch<React.SetStateAction<Order[]>>; 
+  setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  onEditOrder?: (order: Order) => void; // 🔹 optional callback
 }
-export function OrderHistory({ orders, setOrders }: OrderHistoryProps) {
+
+
+export function OrderHistory({ orders, setOrders , onEditOrder }: OrderHistoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<
     'All' | 'Completed' | 'Refunded'>(
     'All');
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 const [editingOrder, setEditingOrder] = useState<Order | null>(null);
 const filteredOrders = [...orders]
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -36,7 +42,7 @@ const filteredOrders = [...orders]
     minimumFractionDigits: 2
   })}`;
 
-
+const navigate = useNavigate();
 
 
   return (
@@ -120,13 +126,15 @@ const filteredOrders = [...orders]
                   <PrinterIcon className="h-4 w-4" />
                 </button>
 
-                <button
-                  onClick={() => setEditingOrder(order)}
-                  className="p-2 text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-500/10 rounded-lg transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
-                  title="Edit Order"
-                >
-                  ✏️
-                </button>
+                            <button
+                onClick={() => {
+                  if (onEditOrder) onEditOrder(order);
+                }}
+                className="p-2 text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-500/10 rounded-lg transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
+                title="Edit Order"
+              >
+                ✏️
+              </button>
               </td>
                 </tr>
                 
@@ -143,21 +151,22 @@ const filteredOrders = [...orders]
         <button onClick={() => setEditingOrder(null)}>✖️</button>
       </div>
 
-      {/* Example editable fields */}
+      {/* Editable fields */}
       <label className="block text-sm font-medium">Table Number / Takeaway</label>
       {!editingOrder.isTakeaway && (
-     <input
-          type="text" // use text, not number
+        <input
+          type="text"
           value={editingOrder.tableNumber || ""}
           onChange={(e) =>
             setEditingOrder({
               ...editingOrder,
-              tableNumber: e.target.value, // now it's string
+              tableNumber: e.target.value, // string or empty
             })
           }
           className="w-full border rounded-lg p-2 dark:bg-slate-900"
         />
       )}
+
       <label className="block text-sm font-medium">Status</label>
       <select
         value={editingOrder.status}
@@ -174,7 +183,7 @@ const filteredOrders = [...orders]
         <option value="Refunded">Refunded</option>
       </select>
 
-      {/* Save button */}
+      {/* Save / Cancel */}
       <div className="flex justify-end gap-3 pt-2">
         <button
           onClick={() => setEditingOrder(null)}
@@ -185,17 +194,26 @@ const filteredOrders = [...orders]
         <button
           onClick={async () => {
             if (!editingOrder) return;
-            // Update Firestore
+
+            const docId = editingOrder.firestoreId;
+            if (!docId) {
+              console.error("Cannot update order: missing Firestore ID");
+              return;
+            }
+
             try {
-              await updateDoc(doc(db, "orders", editingOrder.id), {
-                tableNumber: editingOrder.tableNumber,
+              // Update Firestore using the actual doc ID
+              await updateDoc(doc(db, "orders", editingOrder.firestoreId), {
+                tableNumber: editingOrder.tableNumber || null,
                 status: editingOrder.status,
               });
 
               // Update local state
               setOrders((prev) =>
                 prev.map((o) =>
-                  o.id === editingOrder.id ? editingOrder : o
+                  o.id === editingOrder.id
+                    ? { ...o, tableNumber: editingOrder.tableNumber, status: editingOrder.status }
+                    : o
                 )
               );
 
@@ -212,6 +230,7 @@ const filteredOrders = [...orders]
     </div>
   </div>
 )}
+
         </div>
         
       </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Order } from '../../types';
 import { PrinterIcon, XIcon, PizzaIcon } from 'lucide-react';
+
 interface ReceiptProps {
-  order: Order;
+  order: Omit<Order, "firestoreId">;
   onClose: () => void;
 }
 export function Receipt({ order, onClose }: ReceiptProps) {

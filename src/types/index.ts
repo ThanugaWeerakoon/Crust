@@ -33,8 +33,9 @@ export interface CartItem extends MenuItem {
 
 export interface Order {
   id: string;
-  firestoreId?: string;
+  firestoreId: string;
   items: CartItem[];
+  discountId?: string;
   subtotal: number;
   tax: number;
   discount: number;
@@ -42,7 +43,7 @@ export interface Order {
   paymentMethod: 'Cash' | 'Card' | 'Online';
   tableNumber?: string;
   isTakeaway: boolean;
-  status: 'Completed' | 'Refunded' | 'Pending';
+  status: 'Pending' | 'Refunded' | 'Completed';
   date: string;
   cashier: string;
 }

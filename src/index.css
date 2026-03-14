@@ -13,3 +13,27 @@
     @apply bg-gray-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 antialiased transition-colors duration-200;
   }
 }
+
+
+@media print {
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #printable-receipt {
+    width: 80mm;
+    max-width: 80mm;
+  }
+
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+}

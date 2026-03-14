@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Order } from '../../types';
 import { PrinterIcon, XIcon, PizzaIcon } from 'lucide-react';
 import logo from "../../../assets/Logo.png";
@@ -7,10 +7,103 @@ interface ReceiptProps {
   order: Omit<Order, "firestoreId">;
   onClose: () => void;
 }
+
+
 export function Receipt({ order, onClose }: ReceiptProps) {
-  const handlePrint = () => {
-    window.print();
-  };
+const handlePrint = () => {
+
+  const itemsHTML = order.items.map(item => `
+    <tr>
+      <td>${item.quantity}</td>
+      <td>${item.name}</td>
+      <td style="text-align:right;">${formatCurrency(item.price * item.quantity)}</td>
+    </tr>
+  `).join("");
+
+  const receiptHTML = `
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <style>
+    body{
+      width:384px;
+      font-family:Arial;
+      text-align:center;
+      margin:0;
+      padding:10px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:5px;
+    }
+    th,td{
+      font-size:14px;
+      padding:2px 0;
+    }
+    th{
+      border-bottom:1px dashed black;
+    }
+    .right{
+      text-align:right;
+    }
+  </style>
+  </head>
+
+  <body>
+
+    <img src="${logo}" width="80"/>
+
+    <h2>CRUST</h2>
+    <div>Crust Pizza Ahangama</div>
+    <div>Tel: +94 77 074 7446</div>
+
+    <hr/>
+
+    <div>Order ID: ${order.id}</div>
+    <div>${new Date(order.date).toLocaleString()}</div>
+    <div>Cashier: ${order.cashier}</div>
+    <div>${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}</div>
+
+    <hr/>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Qty</th>
+          <th>Item</th>
+          <th class="right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsHTML}
+      </tbody>
+    </table>
+
+    <hr/>
+
+    <div>Subtotal: ${formatCurrency(order.subtotal)}</div>
+    <div>Discount: ${formatCurrency(order.discount)}</div>
+    <div>Service Charge: ${formatCurrency(order.tax)}</div>
+
+    <h3>Total: ${formatCurrency(order.total)}</h3>
+
+    <div>Payment: ${order.paymentMethod}</div>
+
+    <br/>
+
+    <div>Thank you for dining with us!</div>
+    <div>Please come again.</div>
+
+  </body>
+  </html>
+  `;
+
+  const rawbtUrl = "intent:" + encodeURIComponent(receiptHTML) + "#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;";
+  window.location.href = rawbtUrl;
+
+};
+
   const formatCurrency = (amount: number) => {
     return `LKR ${amount.toLocaleString('en-LK', {
       minimumFractionDigits: 2

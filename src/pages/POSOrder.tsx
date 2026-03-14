@@ -294,11 +294,11 @@ export function POSOrder({
             />
           </div>
             <div className="grid grid-cols-9 gap-2 pb-2">
-        {categories.map((cat) => (
+          {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-3 rounded-xl font-medium text-sm min-h-[44px] transition-colors ${
+            className={`px-3 py-2 rounded-xl font-medium text-sm min-h-[44px] max-w-[100px] text-center break-words transition-colors ${
               activeCategory === cat
                 ? "bg-amber-500 text-white shadow-md"
                 : "bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"

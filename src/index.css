@@ -17,29 +17,12 @@
 
 @media print {
   body {
+    width: 80mm;
     margin: 0;
-    padding: 0;
   }
 
   .print-area {
-    width: 384px;  /* match printer print area in pixels */
-    max-width: 384px;
-    margin: 0 auto; /* center it */
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  @page {
-    size: 80mm auto;
-    margin: 0;
-  }
-
-  .print\:hidden {
-    display: none !important;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 72mm;
+    padding: 4mm;
   }
 }

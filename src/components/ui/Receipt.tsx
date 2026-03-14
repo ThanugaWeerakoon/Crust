@@ -18,7 +18,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
   };
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white w-[80mm]">
         {/* Header - Not printed */}
         <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-slate-800 print:hidden">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">

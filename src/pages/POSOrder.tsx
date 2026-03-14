@@ -293,7 +293,7 @@ export function POSOrder({
               className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-slate-800 border-none rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none"
             />
           </div>
-            <div className="grid grid-cols-4 gap-2 pb-2">
+            <div className="grid grid-cols-9 gap-2 pb-2">
         {categories.map((cat) => (
           <button
             key={cat}

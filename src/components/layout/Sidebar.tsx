@@ -90,7 +90,7 @@ export function Sidebar({
              <img 
                 src={logo} 
                 alt="CRUST Logo"
-                className="h-12 w-12 object-contain filter brightness-0 invert sepia hue-rotate-[20deg] saturate-[600%]"
+                className="h-12 w-12 object-contain"
               />
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
               CRUST

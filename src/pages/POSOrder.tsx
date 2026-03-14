@@ -293,21 +293,21 @@ export function POSOrder({
               className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-slate-800 border-none rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none"
             />
           </div>
-            <div className="grid grid-cols-9 gap-2 pb-2">
-          {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-2 rounded-xl font-medium text-sm min-h-[44px] max-w-[100px] text-center break-words transition-colors ${
-              activeCategory === cat
-                ? "bg-amber-500 text-white shadow-md"
-                : "bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+<div className="flex gap-2 pb-2 overflow-x-auto scrollbar-none">
+  {categories.map((cat) => (
+    <button
+      key={cat}
+      onClick={() => setActiveCategory(cat)}
+      className={`flex-shrink-0 px-3 py-2 rounded-xl font-medium text-sm min-h-[44px] max-w-[100px] text-center break-words transition-colors ${
+        activeCategory === cat
+          ? "bg-amber-500 text-white shadow-md"
+          : "bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
+      }`}
+    >
+      {cat}
+    </button>
+  ))}
+</div>
         </div>
 
         {/* Menu Grid */}

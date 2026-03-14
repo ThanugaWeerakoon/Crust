@@ -34,7 +34,8 @@ export function Receipt({ order, onClose }: ReceiptProps) {
 
         {/* Printable Area */}
         <div
-          className="print-area overflow-y-auto p-8 bg-white text-black"
+          className="print-area overflow-y-auto p-3 bg-white text-black"
+
           id="printable-receipt">
 
           <div className="text-center mb-6">

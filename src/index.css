@@ -14,15 +14,20 @@
   }
 }
 
-
 @media print {
-  body {
-    width: 80mm;
+
+  @page {
+    size: 80mm auto;
     margin: 0;
   }
 
-  .print-area {
-    width: 72mm;
-    padding: 4mm;
+  body {
+    margin: 0;
   }
+
+  #printable-receipt {
+    width: 72mm;
+    margin: 0 auto;
+  }
+
 }

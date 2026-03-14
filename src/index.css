@@ -14,20 +14,4 @@
   }
 }
 
-@media print {
 
-  @page {
-    size: 80mm auto;
-    margin: 0;
-  }
-
-  body {
-    margin: 0;
-  }
-
-  #printable-receipt {
-    width: 72mm;
-    margin: 0 auto;
-  }
-
-}

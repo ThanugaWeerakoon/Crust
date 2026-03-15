@@ -37,7 +37,7 @@ const handlePrint = () => {
 
         {/* Printable Area */}
         <div
-          className="print-area overflow-y-auto p-3 bg-white text-black"
+          className="print-area overflow-y-auto p-2 bg-white text-black"
 
           id="printable-receipt">
 
@@ -52,8 +52,8 @@ const handlePrint = () => {
             <h1 className="text-2xl font-bold uppercase tracking-widest">
               CRUST
             </h1>
-            <p className="text-sm text-gray-600">Crust Pizza Ahangama</p>
-            <p className="text-sm text-gray-600">Tel: +94 77 074 7446</p>
+            {/* <p className="text-sm text-gray-600">Crust Pizza Ahangama</p>
+            <p className="text-sm text-gray-600">Tel: +94 77 074 7446</p> */}
           </div>
 
           <div className="border-t border-dashed border-gray-400 py-4 mb-4 text-sm">

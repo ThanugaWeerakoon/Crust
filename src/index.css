@@ -15,3 +15,24 @@
 }
 
 
+@media print {
+
+  body {
+    width: 80mm;
+    margin: 0;
+  }
+
+  #printable-receipt {
+    width: 80mm;
+  }
+
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+}

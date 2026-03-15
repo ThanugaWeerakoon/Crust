@@ -35,108 +35,110 @@ const handlePrint = () => {
           </button>
         </div>
 
-        {/* Printable Area */}
         <div
-          className="print-area overflow-y-auto p-2 bg-white text-black"
+  className="print-area overflow-y-auto p-2 bg-white text-black"
+  id="printable-receipt"
+>
 
-          id="printable-receipt">
+  <div className="text-center mb-3">
+    <div className="flex justify-center mb-1">
+      <img 
+        src={logo} 
+        alt="CRUST Logo"
+        className="h-10 w-10 object-contain"
+      />
+    </div>
+    <h1 className="text-lg font-bold uppercase tracking-widest">
+      CRUST
+    </h1>
+  </div>
 
-          <div className="text-center mb-6">
-            <div className="flex justify-center mb-2">
-               <img 
-                src={logo} 
-                alt="CRUST Logo"
-                className="h-14 w-14 object-contain"
-              />
-            </div>
-            <h1 className="text-2xl font-bold uppercase tracking-widest">
-              CRUST
-            </h1>
-            {/* <p className="text-sm text-gray-600">Crust Pizza Ahangama</p>
-            <p className="text-sm text-gray-600">Tel: +94 77 074 7446</p> */}
-          </div>
+  <div className="border-t border-dashed border-gray-400 py-2 mb-2 text-xs">
+    <div className="flex justify-between">
+      <span>Order ID:</span>
+      <span className="font-medium">{order.id}</span>
+    </div>
+    <div className="flex justify-between">
+      <span>Date:</span>
+      <span>{new Date(order.date).toLocaleString()}</span>
+    </div>
+    <div className="flex justify-between">
+      <span>Cashier:</span>
+      <span>{order.cashier}</span>
+    </div>
+    <div className="flex justify-between font-bold mt-1 text-sm">
+      <span>Type:</span>
+      <span>
+        {order.isTakeaway ? 'TAKEAWAY' : `TABLE ${order.tableNumber}`}
+      </span>
+    </div>
+  </div>
 
-          <div className="border-t border-dashed border-gray-400 py-4 mb-4 text-sm">
-            <div className="flex justify-between mb-1">
-              <span>Order ID:</span>
-              <span className="font-medium">{order.id}</span>
-            </div>
-            <div className="flex justify-between mb-1">
-              <span>Date:</span>
-              <span>{new Date(order.date).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between mb-1">
-              <span>Cashier:</span>
-              <span>{order.cashier}</span>
-            </div>
-            <div className="flex justify-between font-bold mt-2 text-base">
-              <span>Type:</span>
-              <span>
-                {order.isTakeaway ? 'TAKEAWAY' : `TABLE ${order.tableNumber}`}
-              </span>
-            </div>
-          </div>
+  <div className="border-t border-dashed border-gray-400 py-2 mb-2">
+    <table className="w-full text-xs">
+      <thead>
+        <tr className="text-left">
+          <th className="pb-1">Qty</th>
+          <th className="pb-1">Item</th>
+          <th className="pb-1 text-right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {order.items.map((item, index) =>
+          <tr key={index}>
+            <td className="py-0.5">{item.quantity}</td>
+            <td className="py-0.5 pr-1">
+              <div>{item.name}</div>
+              {item.notes &&
+                <div className="text-[10px] text-gray-500 italic">
+                  {item.notes}
+                </div>
+              }
+            </td>
+            <td className="py-0.5 text-right">
+              {formatCurrency(item.price * item.quantity)}
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
 
-          <div className="border-t border-dashed border-gray-400 py-4 mb-4">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left">
-                  <th className="pb-2 font-medium">Qty</th>
-                  <th className="pb-2 font-medium">Item</th>
-                  <th className="pb-2 font-medium text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.items.map((item, index) =>
-                <tr key={index}>
-                    <td className="py-1 align-top">{item.quantity}</td>
-                    <td className="py-1 pr-2">
-                      <div>{item.name}</div>
-                      {item.notes &&
-                    <div className="text-xs text-gray-500 italic">
-                          Note: {item.notes}
-                        </div>
-                    }
-                    </td>
-                    <td className="py-1 text-right align-top">
-                      {formatCurrency(item.price * item.quantity)}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+  <div className="border-t border-dashed border-gray-400 py-2 mb-2 text-xs">
+    <div className="flex justify-between">
+      <span>Subtotal</span>
+      <span>{formatCurrency(order.subtotal)}</span>
+    </div>
 
-          <div className="border-t border-dashed border-gray-400 py-4 mb-6 text-sm">
-            <div className="flex justify-between mb-1">
-              <span>Subtotal</span>
-              <span>{formatCurrency(order.subtotal)}</span>
-            </div>
-            {order.discount > 0 &&
-            <div className="flex justify-between mb-1 text-gray-600">
-                <span>Discount</span>
-                <span>-{formatCurrency(order.discount)}</span>
-              </div>
-            }
-            <div className="flex justify-between mb-2">
-              <span>Service Charge (10%)</span>
-              <span>{formatCurrency(order.tax)}</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold border-t border-gray-800 pt-2 mt-2">
-              <span>TOTAL</span>
-              <span>{formatCurrency(order.total)}</span>
-            </div>
-            <div className="flex justify-between mt-4 text-gray-600">
-              <span>Payment Method</span>
-              <span className="font-medium">{order.paymentMethod}</span>
-            </div>
-          </div>
+    {order.discount > 0 &&
+      <div className="flex justify-between text-gray-600">
+        <span>Discount</span>
+        <span>-{formatCurrency(order.discount)}</span>
+      </div>
+    }
 
-          <div className="text-center text-sm">
-            <p className="font-medium mb-1">Thank you for dining with us!</p>
-            <p className="text-gray-500">Please come again.</p>
-          </div>
-        </div>
+    <div className="flex justify-between">
+      <span>Service (10%)</span>
+      <span>{formatCurrency(order.tax)}</span>
+    </div>
+
+    <div className="flex justify-between text-base font-bold border-t border-gray-800 pt-1 mt-1">
+      <span>TOTAL</span>
+      <span>{formatCurrency(order.total)}</span>
+    </div>
+
+    <div className="flex justify-between mt-2 text-gray-600">
+      <span>Payment</span>
+      <span className="font-medium">{order.paymentMethod}</span>
+    </div>
+  </div>
+
+  <div className="text-center text-xs">
+    <p className="font-medium">Thank you!</p>
+    <p className="text-gray-500">Visit again</p>
+  </div>
+
+</div>
 
         {/* Footer Actions - Not printed */}
         <div className="p-4 border-t border-gray-200 dark:border-slate-800 flex gap-3 print:hidden">

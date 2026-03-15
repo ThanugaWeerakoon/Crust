@@ -1,7 +1,7 @@
 
 import { Order } from '../../types';
 import { PrinterIcon, XIcon, PizzaIcon } from 'lucide-react';
-import logo from "../../../assets/LogoRec.JPEG";
+import logo from "../../../assets/LogoRec.jpeg";
 
 interface ReceiptProps {
   order: Omit<Order, "firestoreId">;

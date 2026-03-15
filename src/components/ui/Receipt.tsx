@@ -1,7 +1,7 @@
 
 import { Order } from '../../types';
 import { PrinterIcon, XIcon, PizzaIcon } from 'lucide-react';
-import logo from "../../../assets/Logo.png";
+import logo from "../../../assets/LogoRec.JPEG";
 
 interface ReceiptProps {
   order: Omit<Order, "firestoreId">;
@@ -45,12 +45,9 @@ const handlePrint = () => {
       <img 
         src={logo} 
         alt="CRUST Logo"
-        className="h-10 w-10 object-contain"
+        className="h-16 w-16 object-contain"
       />
     </div>
-    <h1 className="text-lg font-bold uppercase tracking-widest">
-      CRUST
-    </h1>
   </div>
 
   <div className="border-t border-dashed border-gray-400 py-2 mb-2 text-xs">

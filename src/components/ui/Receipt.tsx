@@ -40,15 +40,15 @@ const handlePrint = () => {
   id="printable-receipt"
 >
 
-  <div className="text-center mb-3">
-    <div className="flex justify-center mb-1">
-      <img 
-        src={logo} 
-        alt="CRUST Logo"
-        className="h-16 w-16 object-contain"
-      />
-    </div>
+ <div className="text-center mb-3">
+  <div className="flex justify-center mb-1">
+    <img 
+      src={logo} 
+      alt="CRUST Logo"
+      className="h-24 w-24 object-contain"
+    />
   </div>
+</div>
 
   <div className="border-t border-dashed border-gray-400 py-2 mb-2 text-xs">
     <div className="flex justify-between">

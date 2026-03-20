@@ -511,7 +511,7 @@ export function POSOrder({
             <button
               onClick={() => setShowSavePopup(true)}
               disabled={cart.length === 0}
-              className="flex w-full items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]"
+              className="flex w-full items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[34px]"
             >
               <BanknoteIcon className="h-5 w-5" />
               <span>Save</span>
@@ -553,7 +553,7 @@ export function POSOrder({
             <button
               onClick={() => handleCheckout("Cash")}
               disabled={cart.length === 0}
-              className="flex w-full items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]"
+              className="flex w-full items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[34px]"
             >
               <BanknoteIcon className="h-5 w-5" />
               <span>Checkout</span>

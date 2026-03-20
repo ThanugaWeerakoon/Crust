@@ -366,26 +366,7 @@ export function POSOrder({
             Takeaway
           </button>
         </div>
-        {/* 
-        {!isTakeaway && (
-          <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between">
-            <span className="font-medium text-slate-700 dark:text-slate-300">
-              Table Number:
-            </span>
-            <select
-              value={tableNumber}
-              onChange={(e) => setTableNumber(e.target.value)}
-              className="bg-gray-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-slate-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px]"
-            >
-              {[...Array(20)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  Table {i + 1}
-                </option>
-              ))}
-            </select>
-          </div>
-        )} */}
-
+  
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {cart.length === 0 ? (

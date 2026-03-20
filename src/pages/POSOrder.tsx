@@ -448,7 +448,7 @@ export function POSOrder({
             <select
               value={selectedDiscountId}
               onChange={(e) => setSelectedDiscountId(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg py-3 px-4 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px]"
+              className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg py-3 px-4 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500 min-h-[34px]"
             >
               <option value="">No Discount Applied</option>
               {discounts

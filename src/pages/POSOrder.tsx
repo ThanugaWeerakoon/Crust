@@ -148,20 +148,20 @@ export function POSOrder({
 };
 
   const categories: (Category | "All")[] = [
+    "Add Ons",
+    "Beer",
     "Mocktails",
-    "Smoothies",
     "Milkshake",
     "Juice",
-    "Soft Drinks",
-    "The Classics",
-    "Wines",
-    "Beer",
     "Pizza",
-    "Add Ons",
     "Tacos",
+    "The Classics",
     "To Share",
+    "Smoothies",
     "Salads",
+    "Soft Drinks",
     "Sweets",
+    "Wines",
   ];
 
   const handleSaveOrder = () => {

@@ -148,7 +148,6 @@ export function POSOrder({
 };
 
   const categories: (Category | "All")[] = [
-    "All",
     "Mocktails",
     "Smoothies",
     "Milkshake",
@@ -160,7 +159,6 @@ export function POSOrder({
     "Pizza",
     "Add Ons",
     "Tacos",
-    "From the Grill",
     "To Share",
     "Salads",
     "Sweets",
@@ -506,7 +504,7 @@ export function POSOrder({
             <button
               onClick={() => setShowSplitModal(true)}
               disabled={cart.length === 0}
-              className="flex w-full items-center justify-center gap-1 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[64px]"
+              className="flex w-full items-center justify-center gap-1 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-500/50 text-white p-3 rounded-xl font-medium transition-colors min-h-[34px]"
             >
               Split
             </button>

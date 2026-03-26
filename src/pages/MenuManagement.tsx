@@ -152,7 +152,7 @@ export default function MenuManagement({
   const docRef = await addDoc(collection(db, "menus"), itemData);
   const newItem: MenuItem = { id: docRef.id, ...itemData };
   setMenuItems(prev => [...prev, newItem]);
-}
+} 
 
     setIsModalOpen(false);
     setForm(emptyForm);

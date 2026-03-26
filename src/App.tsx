@@ -13,6 +13,7 @@ import { Reports } from './pages/Reports';
 import { StaffManagement } from './pages/StaffManagement';
 import { OrderHistory } from './pages/OrderHistory';
 
+
 // Hooks
 import { useTheme } from './hooks/useTheme';
 
@@ -20,10 +21,12 @@ import { useTheme } from './hooks/useTheme';
 import { MenuItem, Order, Staff, Discount } from './types';
 
 export function App() {
-  const { isDark, toggleTheme } = useTheme();
+  
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
 
   // App State
-  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [currentPage, setCurrentPage] = useState('pos');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Data State
@@ -32,6 +35,8 @@ export function App() {
   const [staff, setStaff] = useState<Staff[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [activeCategory, setActiveCategory] = useState("Add Ons");
+  
 
   // -------------------------------
   // Firestore: Load Menu Items
@@ -121,6 +126,7 @@ export function App() {
             discounts={discounts}
             onPlaceOrder={handlePlaceOrder}
             editingOrder={editingOrder}
+             activeCategory={activeCategory}
           />
         );
       case 'history':
@@ -160,21 +166,20 @@ export function App() {
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-900 overflow-hidden font-sans">
       {/* Sidebar */}
-      <Sidebar
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        isMobileOpen={isMobileMenuOpen}
-        setIsMobileOpen={setIsMobileMenuOpen}
-      />
+     <Sidebar
+  activeCategory={activeCategory}
+  setActiveCategory={setActiveCategory}
+/>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <Header
-          title={getPageTitle()}
-          isDark={isDark}
-          toggleTheme={toggleTheme}
-          onMenuClick={() => setIsMobileMenuOpen(true)}
-        />
+   <Header
+        title="Dashboard"
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage} // ✅ THIS IS CRITICAL
+        onMenuClick={() => setIsMobileOpen(true)}
+      />
+    
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto">{renderPage()}</main>

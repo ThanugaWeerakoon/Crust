@@ -19,6 +19,7 @@ interface POSOrderProps {
     firestoreId?: string
   ) => void;
   editingOrder?: Order | null; // optional
+  activeCategory: string;
 }
 
 export function POSOrder({
@@ -26,11 +27,12 @@ export function POSOrder({
   discounts,
   onPlaceOrder,
   editingOrder: propEditingOrder,
+  activeCategory
 }: POSOrderProps) {
   // SPLIT BILL
   const [showSplitModal, setShowSplitModal] = useState(false);
   const [splitQty, setSplitQty] = useState<Record<string, number>>({});
-  const [activeCategory, setActiveCategory] = useState<Category | "All">("All");
+
   const [searchQuery, setSearchQuery] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isTakeaway, setIsTakeaway] = useState(false);
@@ -147,22 +149,6 @@ export function POSOrder({
     setSelectedDiscountId("");
   };
 
-  const categories: (Category | "All")[] = [
-    "Add Ons",
-    "Beer",
-    "Mocktails",
-    "Milkshake",
-    "Juice",
-    "Pizza",
-    "Tacos",
-    "The Classics",
-    "To Share",
-    "Smoothies",
-    "Salads",
-    "Soft Drinks",
-    "Sweets",
-    "Wines",
-  ];
 
   const handleSaveOrder = () => {
     if (cart.length === 0) return;
@@ -264,16 +250,18 @@ export function POSOrder({
     setShowSplitModal(false);
   };
 
-  const filteredItems = useMemo(() => {
-    return menuItems.filter((item) => {
-      const matchesCategory =
-        activeCategory === "All" || item.category === activeCategory;
-      const matchesSearch = item.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-  }, [menuItems, activeCategory, searchQuery]);
+const filteredItems = useMemo(() => {
+  return menuItems.filter((item) => {
+    const matchesCategory =
+      activeCategory === "All" || item.category === activeCategory;
+
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
+}, [menuItems, activeCategory, searchQuery]);
 
   return (
     <div className="flex flex-col lg:flex-row h-[calc(90vh-64px)] bg-gray-50 dark:bg-slate-900 overflow-hidden">
@@ -291,21 +279,7 @@ export function POSOrder({
               className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-slate-800 border-none rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none"
             />
           </div>
-          <div className="flex gap-2 pb-2 overflow-x-auto scrollbar-none">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`flex-shrink-0 px-3 py-2 rounded-xl font-medium text-sm min-h-[44px] max-w-[100px] text-center break-words transition-colors ${
-                  activeCategory === cat
-                    ? "bg-amber-500 text-white shadow-md"
-                    : "bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+    
         </div>
 
         {/* Menu Grid */}

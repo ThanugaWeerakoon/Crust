@@ -11,50 +11,64 @@ interface ReceiptProps {
 
 export function Receipt({ order, onClose }: ReceiptProps) {
 
-  const handlePrint = () => {
-    const ESC = "\x1b";
+  const handlePrint = async () => {
+  const ESC = "\x1b";
 
-    let rawbtReceipt = "";
-
-    // Logo centered
-    rawbtReceipt += "[C]<img>" + LOGO_URL + "</img>\n";
-
-    // Header: centered
-    rawbtReceipt += "[C]CRUST\n";
-    rawbtReceipt += "[C]Crust Pizza Ahangama\n";
-    rawbtReceipt += "[C]Tel: +94 77 074 7446\n\n";
-
-    // Left-align order info
-    rawbtReceipt += ESC + "a" + "\x00";
-    rawbtReceipt += `Order ID: ${order.id}\n`;
-    rawbtReceipt += `Date: ${new Date(order.date).toLocaleString()}\n`;
-    rawbtReceipt += `Cashier: ${order.cashier}\n`;
-    rawbtReceipt += `Type: ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
-    rawbtReceipt += "-------------------------------\n";
-
-    order.items.forEach(item => {
-      const qty = item.quantity.toString().padEnd(3, " ");
-      const name = item.name.padEnd(20, " ");
-      const amount = (item.price * item.quantity).toFixed(2).padStart(7, " ");
-      rawbtReceipt += `${qty} ${name}${amount}\n`;
-      if (item.notes) {
-        rawbtReceipt += `  Note: ${item.notes}\n`;
-      }
+  // Fetch logo from Supabase and convert to base64
+  const getBase64Logo = async (): Promise<string> => {
+    const response = await fetch(LOGO_URL);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
     });
-
-    rawbtReceipt += "-------------------------------\n";
-
-    rawbtReceipt += `Subtotal: ${order.subtotal.toFixed(2)}\n`;
-    if (order.discount > 0) rawbtReceipt += `Discount: -${order.discount.toFixed(2)}\n`;
-    rawbtReceipt += `Service Charge (10%): ${order.tax.toFixed(2)}\n`;
-    rawbtReceipt += `TOTAL: ${order.total.toFixed(2)}\n`;
-    rawbtReceipt += `Payment Method: ${order.paymentMethod}\n\n`;
-
-    rawbtReceipt += "[C]Thank you for dining with us!\n";
-    rawbtReceipt += "[C]Please come again.\n\n\n";
-
-    window.open(`rawbt://${encodeURIComponent(rawbtReceipt)}`);
   };
+
+  const logoBase64 = await getBase64Logo();
+
+  let rawbtReceipt = "";
+
+  // Logo centered using base64
+  rawbtReceipt += "[C]<img>" + logoBase64 + "</img>\n";
+
+  // Header
+  rawbtReceipt += "[C]CRUST\n";
+  rawbtReceipt += "[C]Crust Pizza Ahangama\n";
+  rawbtReceipt += "[C]Tel: +94 77 074 7446\n\n";
+
+  // Left-align order info
+  rawbtReceipt += ESC + "a" + "\x00";
+  rawbtReceipt += `Order ID: ${order.id}\n`;
+  rawbtReceipt += `Date: ${new Date(order.date).toLocaleString()}\n`;
+  rawbtReceipt += `Cashier: ${order.cashier}\n`;
+  rawbtReceipt += `Type: ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
+  rawbtReceipt += "-------------------------------\n";
+
+  order.items.forEach(item => {
+    const qty = item.quantity.toString().padEnd(3, " ");
+    const name = item.name.padEnd(20, " ");
+    const amount = (item.price * item.quantity).toFixed(2).padStart(7, " ");
+    rawbtReceipt += `${qty} ${name}${amount}\n`;
+    if (item.notes) {
+      rawbtReceipt += `  Note: ${item.notes}\n`;
+    }
+  });
+
+  rawbtReceipt += "-------------------------------\n";
+
+  rawbtReceipt += `Subtotal: ${order.subtotal.toFixed(2)}\n`;
+  if (order.discount > 0) rawbtReceipt += `Discount: -${order.discount.toFixed(2)}\n`;
+  rawbtReceipt += `Service Charge (10%): ${order.tax.toFixed(2)}\n`;
+  rawbtReceipt += `TOTAL: ${order.total.toFixed(2)}\n`;
+  rawbtReceipt += `Payment Method: ${order.paymentMethod}\n\n`;
+
+  rawbtReceipt += "[C]Thank you for dining with us!\n";
+  rawbtReceipt += "[C]Please come again.\n\n\n";
+
+  window.open(`rawbt://${encodeURIComponent(rawbtReceipt)}`);
+};
+
 
   const formatCurrency = (amount: number) => {
     return `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
@@ -169,8 +183,8 @@ export function Receipt({ order, onClose }: ReceiptProps) {
             className="flex-1 py-3 px-4 rounded-lg font-medium border border-gray-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
             Close
           </button>
-          <button
-            onClick={handlePrint}
+                <button
+            onClick={() => handlePrint()}
             className="flex-1 py-3 px-4 rounded-lg font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors flex items-center justify-center gap-2">
             <PrinterIcon className="h-5 w-5" />
             Print Receipt

@@ -11,7 +11,29 @@ interface ReceiptProps {
 
 export function Receipt({ order, onClose }: ReceiptProps) {
 const handlePrint = () => {
-  window.print();
+  const printContents = document.getElementById("printable-receipt")?.innerHTML;
+  if (!printContents) return;
+
+  const win = window.open("", "_blank", "width=400,height=600");
+  if (!win) return;
+
+  win.document.write(`
+    <html>
+      <head>
+        <title>Receipt</title>
+        <style>
+          body { font-family: monospace; margin: 0; padding: 8px; font-size: 12px; }
+          table { width: 100%; border-collapse: collapse; }
+          img { max-width: 96px; max-height: 96px; object-fit: contain; display: block; margin: 0 auto; }
+        </style>
+      </head>
+      <body>${printContents}</body>
+    </html>
+  `);
+  win.document.close();
+  win.focus();
+  win.print();
+  win.close();
 };
 
   const formatCurrency = (amount: number) => {

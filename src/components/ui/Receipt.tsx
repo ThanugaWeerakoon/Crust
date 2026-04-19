@@ -10,30 +10,81 @@ interface ReceiptProps {
 
 
 export function Receipt({ order, onClose }: ReceiptProps) {
-const handlePrint = () => {
-  const printContents = document.getElementById("printable-receipt")?.innerHTML;
-  if (!printContents) return;
+const handlePrint = async () => {
+  const RAWBT_URL = "http://localhost:8080"; // RawBT default — change if different
 
-  const win = window.open("", "_blank", "width=400,height=600");
-  if (!win) return;
+  // Build ESC/POS text receipt
+  const ESC = "\x1B";
+  const LF = "\n";
+  const BOLD_ON = `${ESC}E\x01`;
+  const BOLD_OFF = `${ESC}E\x00`;
+  const CENTER = `${ESC}a\x01`;
+  const LEFT = `${ESC}a\x00`;
+  const CUT = `${ESC}i`;
 
-  win.document.write(`
-    <html>
-      <head>
-        <title>Receipt</title>
-        <style>
-          body { font-family: monospace; margin: 0; padding: 8px; font-size: 12px; }
-          table { width: 100%; border-collapse: collapse; }
-          img { max-width: 96px; max-height: 96px; object-fit: contain; display: block; margin: 0 auto; }
-        </style>
-      </head>
-      <body>${printContents}</body>
-    </html>
-  `);
-  win.document.close();
-  win.focus();
-  win.print();
-  win.close();
+  const pad = (left: string, right: string, width = 32) => {
+    const gap = width - left.length - right.length;
+    return left + " ".repeat(Math.max(gap, 1)) + right;
+  };
+
+  let receipt = "";
+
+  // Header
+  receipt += CENTER;
+  receipt += BOLD_ON + "CRUST" + BOLD_OFF + LF;
+  receipt += LF;
+
+  // Order info
+  receipt += LEFT;
+  receipt += pad("Order ID:", order.id) + LF;
+  receipt += pad("Date:", new Date(order.date).toLocaleString()) + LF;
+  receipt += pad("Cashier:", order.cashier) + LF;
+  receipt += BOLD_ON;
+  receipt += pad("Type:", order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`) + LF;
+  receipt += BOLD_OFF;
+  receipt += "--------------------------------" + LF;
+
+  // Items
+  for (const item of order.items) {
+    const amount = `LKR ${(item.price * item.quantity).toFixed(2)}`;
+    receipt += pad(`${item.quantity}x ${item.name}`, amount) + LF;
+    if (item.notes) {
+      receipt += `   (${item.notes})` + LF;
+    }
+  }
+
+  receipt += "--------------------------------" + LF;
+
+  // Totals
+  receipt += pad("Subtotal", `LKR ${order.subtotal.toFixed(2)}`) + LF;
+  if (order.discount > 0) {
+    receipt += pad("Discount", `-LKR ${order.discount.toFixed(2)}`) + LF;
+  }
+  receipt += pad("Service (10%)", `LKR ${order.tax.toFixed(2)}`) + LF;
+  receipt += "--------------------------------" + LF;
+  receipt += BOLD_ON;
+  receipt += pad("TOTAL", `LKR ${order.total.toFixed(2)}`) + LF;
+  receipt += BOLD_OFF;
+  receipt += pad("Payment", order.paymentMethod) + LF;
+  receipt += "--------------------------------" + LF;
+
+  // Footer
+  receipt += CENTER;
+  receipt += "Thank you!" + LF;
+  receipt += "Visit again" + LF;
+  receipt += LF + LF + LF;
+  receipt += CUT;
+
+  try {
+    await fetch(`${RAWBT_URL}/rawbt`, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain; charset=UTF-8" },
+      body: receipt,
+    });
+  } catch (err) {
+    console.error("RawBT print failed:", err);
+    alert("Could not connect to RawBT. Make sure the app is open on your tablet and on the same network.");
+  }
 };
 
   const formatCurrency = (amount: number) => {

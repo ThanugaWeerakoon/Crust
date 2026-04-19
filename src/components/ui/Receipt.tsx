@@ -10,82 +10,56 @@ interface ReceiptProps {
 
 
 export function Receipt({ order, onClose }: ReceiptProps) {
-const handlePrint = async () => {
-  const RAWBT_URL = "http://localhost:8080"; // RawBT default — change if different
+const handlePrint = () => {
+  const ESC = "\x1b";
+  const GS = "\x1d";
 
-  // Build ESC/POS text receipt
-  const ESC = "\x1B";
-  const LF = "\n";
-  const BOLD_ON = `${ESC}E\x01`;
-  const BOLD_OFF = `${ESC}E\x00`;
-  const CENTER = `${ESC}a\x01`;
-  const LEFT = `${ESC}a\x00`;
-  const CUT = `${ESC}i`;
+  let rawbtReceipt = "";
 
-  const pad = (left: string, right: string, width = 32) => {
-    const gap = width - left.length - right.length;
-    return left + " ".repeat(Math.max(gap, 1)) + right;
-  };
+  // Header: centered
+  rawbtReceipt += ESC + "a" + "\x01"; // center align
+  rawbtReceipt += "      CRUST\n"; // store name
+  rawbtReceipt += "Crust Pizza Ahangama\n";
+  rawbtReceipt += "Tel: +94 77 074 7446\n";
+  rawbtReceipt += "\n";
 
-  let receipt = "";
+  // Left-align order info
+  rawbtReceipt += ESC + "a" + "\x00"; // left align
+  rawbtReceipt += `Order ID: ${order.id}\n`;
+  rawbtReceipt += `Date: ${new Date(order.date).toLocaleString()}\n`;
+  rawbtReceipt += `Cashier: ${order.cashier}\n`;
+  rawbtReceipt += `Type: ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
+  rawbtReceipt += "-------------------------------\n";
 
-  // Header
-  receipt += CENTER;
-  receipt += BOLD_ON + "CRUST" + BOLD_OFF + LF;
-  receipt += LF;
-
-  // Order info
-  receipt += LEFT;
-  receipt += pad("Order ID:", order.id) + LF;
-  receipt += pad("Date:", new Date(order.date).toLocaleString()) + LF;
-  receipt += pad("Cashier:", order.cashier) + LF;
-  receipt += BOLD_ON;
-  receipt += pad("Type:", order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`) + LF;
-  receipt += BOLD_OFF;
-  receipt += "--------------------------------" + LF;
-
-  // Items
-  for (const item of order.items) {
-    const amount = `LKR ${(item.price * item.quantity).toFixed(2)}`;
-    receipt += pad(`${item.quantity}x ${item.name}`, amount) + LF;
-    if (item.notes) {
-      receipt += `   (${item.notes})` + LF;
+  // Items table
+  order.items.forEach(item => {
+    const qty = item.quantity.toString().padEnd(3, " ");
+    const name = item.name.padEnd(20, " ");
+    const amount = (item.price * item.quantity).toFixed(2).padStart(7, " ");
+    rawbtReceipt += `${qty} ${name}${amount}\n`;
+    if(item.notes) {
+      rawbtReceipt += `  Note: ${item.notes}\n`;
     }
-  }
+  });
 
-  receipt += "--------------------------------" + LF;
+  rawbtReceipt += "-------------------------------\n";
 
   // Totals
-  receipt += pad("Subtotal", `LKR ${order.subtotal.toFixed(2)}`) + LF;
-  if (order.discount > 0) {
-    receipt += pad("Discount", `-LKR ${order.discount.toFixed(2)}`) + LF;
-  }
-  receipt += pad("Service (10%)", `LKR ${order.tax.toFixed(2)}`) + LF;
-  receipt += "--------------------------------" + LF;
-  receipt += BOLD_ON;
-  receipt += pad("TOTAL", `LKR ${order.total.toFixed(2)}`) + LF;
-  receipt += BOLD_OFF;
-  receipt += pad("Payment", order.paymentMethod) + LF;
-  receipt += "--------------------------------" + LF;
+  rawbtReceipt += `Subtotal: ${order.subtotal.toFixed(2)}\n`;
+  if(order.discount > 0) rawbtReceipt += `Discount: -${order.discount.toFixed(2)}\n`;
+  rawbtReceipt += `Service Charge (10%): ${order.tax.toFixed(2)}\n`;
+  rawbtReceipt += `TOTAL: ${order.total.toFixed(2)}\n`;
+  rawbtReceipt += `Payment Method: ${order.paymentMethod}\n\n`;
 
-  // Footer
-  receipt += CENTER;
-  receipt += "Thank you!" + LF;
-  receipt += "Visit again" + LF;
-  receipt += LF + LF + LF;
-  receipt += CUT;
+  // Footer: centered
+  rawbtReceipt += ESC + "a" + "\x01"; // center
+  rawbtReceipt += "Thank you for dining with us!\n";
+  rawbtReceipt += "Please come again.\n\n\n";
 
-  try {
-    await fetch(`${RAWBT_URL}/rawbt`, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain; charset=UTF-8" },
-      body: receipt,
-    });
-  } catch (err) {
-    console.error("RawBT print failed:", err);
-    alert("Could not connect to RawBT. Make sure the app is open on your tablet and on the same network.");
-  }
+  // Send to RawBT
+  window.open(`rawbt://${encodeURIComponent(rawbtReceipt)}`);
 };
+
 
   const formatCurrency = (amount: number) => {
     return `LKR ${amount.toLocaleString('en-LK', {

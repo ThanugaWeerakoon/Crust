@@ -10,56 +10,69 @@ interface ReceiptProps {
 
 
 export function Receipt({ order, onClose }: ReceiptProps) {
-const handlePrint = () => {
+const handlePrint = async () => {
   const ESC = "\x1b";
-  const GS = "\x1d";
+
+  // Convert imported logo to base64 data URL
+  const getBase64Logo = (): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.src = logo; // your imported logo
+    });
+  };
+
+  const logoBase64 = await getBase64Logo();
 
   let rawbtReceipt = "";
 
-  // Header: centered
-  rawbtReceipt += ESC + "a" + "\x01"; // center align
-  rawbtReceipt += "      CRUST\n"; // store name
-  rawbtReceipt += "Crust Pizza Ahangama\n";
-  rawbtReceipt += "Tel: +94 77 074 7446\n";
-  rawbtReceipt += "\n";
+  // Logo centered using base64
+  rawbtReceipt += "[C]<img>" + logoBase64 + "</img>\n";
+
+  // Header
+  rawbtReceipt += "[C]CRUST\n";
+  rawbtReceipt += "[C]Crust Pizza Ahangama\n";
+  rawbtReceipt += "[C]Tel: +94 77 074 7446\n\n";
 
   // Left-align order info
-  rawbtReceipt += ESC + "a" + "\x00"; // left align
+  rawbtReceipt += ESC + "a" + "\x00";
   rawbtReceipt += `Order ID: ${order.id}\n`;
   rawbtReceipt += `Date: ${new Date(order.date).toLocaleString()}\n`;
   rawbtReceipt += `Cashier: ${order.cashier}\n`;
   rawbtReceipt += `Type: ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
   rawbtReceipt += "-------------------------------\n";
 
-  // Items table
   order.items.forEach(item => {
     const qty = item.quantity.toString().padEnd(3, " ");
     const name = item.name.padEnd(20, " ");
     const amount = (item.price * item.quantity).toFixed(2).padStart(7, " ");
     rawbtReceipt += `${qty} ${name}${amount}\n`;
-    if(item.notes) {
+    if (item.notes) {
       rawbtReceipt += `  Note: ${item.notes}\n`;
     }
   });
 
   rawbtReceipt += "-------------------------------\n";
 
-  // Totals
   rawbtReceipt += `Subtotal: ${order.subtotal.toFixed(2)}\n`;
-  if(order.discount > 0) rawbtReceipt += `Discount: -${order.discount.toFixed(2)}\n`;
+  if (order.discount > 0) rawbtReceipt += `Discount: -${order.discount.toFixed(2)}\n`;
   rawbtReceipt += `Service Charge (10%): ${order.tax.toFixed(2)}\n`;
   rawbtReceipt += `TOTAL: ${order.total.toFixed(2)}\n`;
   rawbtReceipt += `Payment Method: ${order.paymentMethod}\n\n`;
 
-  // Footer: centered
-  rawbtReceipt += ESC + "a" + "\x01"; // center
-  rawbtReceipt += "Thank you for dining with us!\n";
-  rawbtReceipt += "Please come again.\n\n\n";
+  rawbtReceipt += "[C]Thank you for dining with us!\n";
+  rawbtReceipt += "[C]Please come again.\n\n\n";
 
-  // Send to RawBT
   window.open(`rawbt://${encodeURIComponent(rawbtReceipt)}`);
 };
-
 
   const formatCurrency = (amount: number) => {
     return `LKR ${amount.toLocaleString('en-LK', {

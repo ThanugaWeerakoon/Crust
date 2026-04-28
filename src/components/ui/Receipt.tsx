@@ -10,101 +10,76 @@ interface ReceiptProps {
 
 export function Receipt({ order, onClose }: ReceiptProps) {
 
-  const formatCurrency = (amount: number) => {
-    return `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
-  };
+ const handlePrint = async () => {
 
-  const handlePrint = async () => {
-    const ESC = "\x1b";
-    const GS  = "\x1d";
-
-    // Fetch logo and convert to base64
-    const getBase64Logo = async (): Promise<string> => {
-      const response = await fetch(LOGO_URL);
-      const blob = await response.blob();
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      });
-    };
-
-    const logoBase64 = await getBase64Logo();
-
-    let receipt = "";
-
-    // Initialize printer
-    receipt += ESC + "@";
-
-    // Logo centered
-    receipt += "[C]<img>" + logoBase64 + "</img>\n";
-
-    // Restaurant info centered
-    receipt += "[C]<b>CRUST</b>\n";
-    receipt += "[C]Crust Pizza Ahangama\n";
-    receipt += "[C]Tel: +94 77 074 7446\n";
-    receipt += "[C]--------------------------------\n";
-
-    // Order info left aligned
-    receipt += ESC + "a" + "\x00"; // left align
-    receipt += `Order ID : ${order.id}\n`;
-    receipt += `Date     : ${new Date(order.date).toLocaleString()}\n`;
-    receipt += `Cashier  : ${order.cashier}\n`;
-    receipt += `Type     : ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
-    receipt += "--------------------------------\n";
-
-    // Column headers
-    receipt += "Qty  Item                  Amount\n";
-    receipt += "--------------------------------\n";
-
-    // Items
-    order.items.forEach(item => {
-      const qty    = item.quantity.toString().padEnd(5);
-      const name   = item.name.length > 14
-        ? item.name.substring(0, 14)
-        : item.name.padEnd(14);
-      const amount = `LKR ${(item.price * item.quantity).toFixed(2)}`.padStart(13);
-      receipt += `${qty}${name}${amount}\n`;
-      if (item.notes) {
-        receipt += `     Note: ${item.notes}\n`;
-      }
+  // Fetch logo and convert to base64
+  const getBase64Logo = async (): Promise<string> => {
+    const response = await fetch(LOGO_URL);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
     });
-
-    receipt += "--------------------------------\n";
-
-    // Totals
-    const labelW = 20;
-    const valueW = 12;
-
-    const line = (label: string, value: string) => {
-      return label.padEnd(labelW) + value.padStart(valueW) + "\n";
-    };
-
-    receipt += line("Subtotal", `LKR ${order.subtotal.toFixed(2)}`);
-    if (order.discount > 0) {
-      receipt += line("Discount", `-LKR ${order.discount.toFixed(2)}`);
-    }
-    receipt += line("Service (10%)", `LKR ${order.tax.toFixed(2)}`);
-    receipt += "--------------------------------\n";
-
-    // Bold total
-    receipt += "[C]<b>" + `TOTAL: LKR ${order.total.toFixed(2)}` + "</b>\n";
-    receipt += "--------------------------------\n";
-
-    receipt += line("Payment", order.paymentMethod);
-
-    // Footer
-    receipt += "\n";
-    receipt += "[C]Thank you for dining with us!\n";
-    receipt += "[C]Please visit again!\n";
-
-    // Feed and cut
-    receipt += "\n\n\n";
-    receipt += GS + "V" + "\x41" + "\x00"; // feed and full cut
-
-    // Send to RawBT
-    window.location.href = `rawbt://${encodeURIComponent(receipt)}`;
   };
+
+  const logoBase64 = await getBase64Logo();
+
+  let receipt = "";
+
+  // Logo
+  receipt += "[C]<img>" + logoBase64 + "</img>\n";
+
+  // Header
+  receipt += "[C]<b>CRUST</b>\n";
+  receipt += "[C]Crust Pizza Ahangama\n";
+  receipt += "[C]Tel: +94 77 074 7446\n";
+  receipt += "[C]--------------------------------\n";
+
+  // Order info
+  receipt += `[L]Order ID : ${order.id}\n`;
+  receipt += `[L]Date     : ${new Date(order.date).toLocaleString()}\n`;
+  receipt += `[L]Cashier  : ${order.cashier}\n`;
+  receipt += `[L]Type     : ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
+  receipt += "[C]--------------------------------\n";
+
+  // Items header
+  receipt += "[L]<b>Qty  Item                Amount</b>\n";
+  receipt += "[C]--------------------------------\n";
+
+  // Items
+  order.items.forEach(item => {
+    const qty    = String(item.quantity).padEnd(5);
+    const name   = item.name.substring(0, 13).padEnd(13);
+    const amount = `LKR ${(item.price * item.quantity).toFixed(2)}`;
+    receipt += `[L]${qty} ${name} ${amount}\n`;
+    if (item.notes) {
+      receipt += `[L]     > ${item.notes}\n`;
+    }
+  });
+
+  receipt += "[C]--------------------------------\n";
+
+  // Totals
+  receipt += `[L]Subtotal[R]LKR ${order.subtotal.toFixed(2)}\n`;
+  if (order.discount > 0) {
+    receipt += `[L]Discount[R]-LKR ${order.discount.toFixed(2)}\n`;
+  }
+  receipt += `[L]Service (10%)[R]LKR ${order.tax.toFixed(2)}\n`;
+  receipt += "[C]--------------------------------\n";
+  receipt += `[L]<b>TOTAL[R]LKR ${order.total.toFixed(2)}</b>\n`;
+  receipt += "[C]--------------------------------\n";
+  receipt += `[L]Payment[R]${order.paymentMethod}\n`;
+
+  // Footer
+  receipt += "\n";
+  receipt += "[C]Thank you for dining with us!\n";
+  receipt += "[C]Please visit again!\n";
+  receipt += "\n\n\n";
+
+  // Send to RawBT — use window.open not window.location.href
+  window.open(`rawbt://${encodeURIComponent(receipt)}`);
+};
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">

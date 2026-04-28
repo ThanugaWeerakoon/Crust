@@ -15,79 +15,9 @@ export function Receipt({ order, onClose }: ReceiptProps) {
   };
 
 const handlePrint = () => {
-  const printContents = document.getElementById('printable-receipt')?.innerHTML;
-  if (!printContents) return;
-
-  const iframe = document.createElement('iframe');
-  iframe.style.position = 'fixed';
-  iframe.style.right = '0';
-  iframe.style.bottom = '0';
-  iframe.style.width = '0';
-  iframe.style.height = '0';
-  iframe.style.border = '0';
-  document.body.appendChild(iframe);
-
-  const doc = iframe.contentWindow?.document;
-  if (!doc) return;
-
-  doc.open();
-  doc.write(`
-    <html>
-      <head>
-        <style>
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: monospace; font-size: 12px; padding: 8px; color: black; }
-          .text-center { text-align: center; }
-          .flex { display: flex; }
-          .justify-between { justify-content: space-between; }
-          .justify-center { justify-content: center; }
-          .font-medium { font-weight: 500; }
-          .font-bold { font-weight: 700; }
-          .text-xs { font-size: 11px; }
-          .text-sm { font-size: 13px; }
-          .py-2 { padding-top: 8px; padding-bottom: 8px; }
-          .py-0\\.5 { padding-top: 2px; padding-bottom: 2px; }
-          .pb-1 { padding-bottom: 4px; }
-          .pr-1 { padding-right: 4px; }
-          .mt-1 { margin-top: 4px; }
-          .mt-2 { margin-top: 8px; }
-          .pt-1 { padding-top: 4px; }
-          .border-t { border-top: 1px solid; }
-          .border-black { border-color: black; }
-          .border-dashed { border-style: dashed; }
-          .border-gray-400 { border-color: #9ca3af; }
-          .text-gray-500 { color: #6b7280; }
-          .text-gray-600 { color: #4b5563; }
-          .italic { font-style: italic; }
-          .text-\\[10px\\] { font-size: 10px; }
-          table { width: 100%; border-collapse: collapse; }
-          th { text-align: left; }
-          .text-right { text-align: right; }
-          img { height: 96px; width: 96px; object-fit: contain; display: block; margin: 0 auto; }
-          @media print {
-            body { margin: 0; }
-          }
-        </style>
-      </head>
-      <body>${printContents}</body>
-    </html>
-  `);
-  doc.close();
-
-  // Wait for image to load before printing
-  const img = iframe.contentWindow?.document.querySelector('img');
-  const triggerPrint = () => {
-    iframe.contentWindow?.focus();
-    iframe.contentWindow?.print();
-    setTimeout(() => document.body.removeChild(iframe), 1000);
-  };
-
-  if (img) {
-    img.onload = triggerPrint;
-    img.onerror = triggerPrint; // print anyway if image fails
-  } else {
-    triggerPrint();
-  }
+  setTimeout(() => {
+    window.print();
+  }, 100);
 };
 
 

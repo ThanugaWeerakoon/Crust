@@ -6,10 +6,6 @@
 
 
 @media print {
-  @page {
-    size: 80mm auto;
-    margin: 0;
-  }
 
   body * {
     visibility: hidden;
@@ -20,18 +16,27 @@
   }
 
   #printable-receipt {
-    position: fixed;   /* ← change absolute to fixed */
+    position: absolute;
     top: 0;
     left: 0;
     width: 80mm;
   }
 
+  /* 🔥 CRITICAL FIXES */
   .print-area {
     overflow: visible !important;
     height: auto !important;
   }
 
-  table { page-break-inside: avoid; }
-  tr { page-break-inside: avoid; }
-  div { page-break-inside: avoid; }
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  div {
+    page-break-inside: avoid;
+  }
 }

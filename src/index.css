@@ -22,7 +22,7 @@
     width: 80mm;
   }
 
-  /* 🔥 CRITICAL FIXES */
+
   .print-area {
     overflow: visible !important;
     height: auto !important;

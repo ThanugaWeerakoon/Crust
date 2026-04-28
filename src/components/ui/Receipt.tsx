@@ -15,25 +15,11 @@ export function Receipt({ order, onClose }: ReceiptProps) {
   };
 
   const handlePrint = () => {
-    const printContents = document.getElementById("printable-receipt");
-    if (!printContents) return;
+  setTimeout(() => {
+    window.print();
+  }, 200);
+};
 
-    const originalContents = document.body.innerHTML;
-
-    // Replace body with receipt
-    document.body.innerHTML = printContents.innerHTML;
-
-    // Small delay helps on tablets
-    setTimeout(() => {
-      window.print();
-
-      // Restore original UI after printing
-      document.body.innerHTML = originalContents;
-
-      // Reload to restore React state properly
-      window.location.reload();
-    }, 300);
-  };
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">

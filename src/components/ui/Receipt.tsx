@@ -1,7 +1,7 @@
 import { Order } from '../../types';
 import { PrinterIcon, XIcon } from 'lucide-react';
 
-const LOGO_URL = "https://bheduvpljuxhovkeqtye.supabase.co/storage/v1/object/public/artists/LogoRec.jpeg";
+
 
 interface ReceiptProps {
   order: Omit<Order, "firestoreId">;
@@ -40,11 +40,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
             {/* Logo */}
             <div className="text-center mb-3">
               <div className="flex justify-center mb-1">
-                <img
-                  src={LOGO_URL}
-                  alt="CRUST Logo"
-                  className="h-24 w-24 object-contain"
-                />
+                
               </div>
             </div>
 

@@ -10,83 +10,23 @@ interface ReceiptProps {
 
 export function Receipt({ order, onClose }: ReceiptProps) {
 
- const handlePrint = async () => {
-
-  // Fetch logo and convert to base64
-  const getBase64Logo = async (): Promise<string> => {
-    const response = await fetch(LOGO_URL);
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    });
+  const formatCurrency = (amount: number) => {
+    return `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
   };
 
-  const logoBase64 = await getBase64Logo();
-
-  let receipt = "";
-
-  // Logo
-  receipt += "[C]<img>" + logoBase64 + "</img>\n";
-
-  // Header
-  receipt += "[C]<b>CRUST</b>\n";
-  receipt += "[C]Crust Pizza Ahangama\n";
-  receipt += "[C]Tel: +94 77 074 7446\n";
-  receipt += "[C]--------------------------------\n";
-
-  // Order info
-  receipt += `[L]Order ID : ${order.id}\n`;
-  receipt += `[L]Date     : ${new Date(order.date).toLocaleString()}\n`;
-  receipt += `[L]Cashier  : ${order.cashier}\n`;
-  receipt += `[L]Type     : ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
-  receipt += "[C]--------------------------------\n";
-
-  // Items header
-  receipt += "[L]<b>Qty  Item                Amount</b>\n";
-  receipt += "[C]--------------------------------\n";
-
-  // Items
-  order.items.forEach(item => {
-    const qty    = String(item.quantity).padEnd(5);
-    const name   = item.name.substring(0, 13).padEnd(13);
-    const amount = `LKR ${(item.price * item.quantity).toFixed(2)}`;
-    receipt += `[L]${qty} ${name} ${amount}\n`;
-    if (item.notes) {
-      receipt += `[L]     > ${item.notes}\n`;
-    }
-  });
-
-  receipt += "[C]--------------------------------\n";
-
-  // Totals
-  receipt += `[L]Subtotal[R]LKR ${order.subtotal.toFixed(2)}\n`;
-  if (order.discount > 0) {
-    receipt += `[L]Discount[R]-LKR ${order.discount.toFixed(2)}\n`;
-  }
-  receipt += `[L]Service (10%)[R]LKR ${order.tax.toFixed(2)}\n`;
-  receipt += "[C]--------------------------------\n";
-  receipt += `[L]<b>TOTAL[R]LKR ${order.total.toFixed(2)}</b>\n`;
-  receipt += "[C]--------------------------------\n";
-  receipt += `[L]Payment[R]${order.paymentMethod}\n`;
-
-  // Footer
-  receipt += "\n";
-  receipt += "[C]Thank you for dining with us!\n";
-  receipt += "[C]Please visit again!\n";
-  receipt += "\n\n\n";
-
-  // Send to RawBT — use window.open not window.location.href
-  window.open(`rawbt://${encodeURIComponent(receipt)}`);
+const handlePrint = () => {
+  setTimeout(() => {
+    window.print();
+  }, 100);
 };
+
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
 
         {/* Header */}
-        <div className="flex justify-between items-center p-1 border-b border-gray-200 dark:border-slate-800">
+        <div className="flex justify-between items-center p-1 border-b border-gray-200  dark:border-slate-800">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">Receipt Preview</h2>
           <button onClick={onClose} className="p-2 text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">
             <XIcon className="h-5 w-5" />
@@ -94,11 +34,11 @@ export function Receipt({ order, onClose }: ReceiptProps) {
         </div>
 
         {/* Scrollable preview */}
-        <div className="flex-1">
+       <div className="flex-1">
           <div className="print-area p-2 bg-white text-black" id="printable-receipt">
-
+            
             {/* Logo */}
-            <div className="text-center">
+            <div className="text-center"> {/* removed mb-3 */}
               <div className="flex justify-center">
                 <img
                   src={LOGO_URL}
@@ -165,20 +105,24 @@ export function Receipt({ order, onClose }: ReceiptProps) {
                 <span>Subtotal</span>
                 <span>{formatCurrency(order.subtotal)}</span>
               </div>
+
               {order.discount > 0 && (
                 <div className="flex justify-between text-gray-600">
                   <span>Discount</span>
                   <span>-{formatCurrency(order.discount)}</span>
                 </div>
               )}
+
               <div className="flex justify-between">
                 <span>Service (10%)</span>
                 <span>{formatCurrency(order.tax)}</span>
               </div>
+
               <div className="flex justify-between font-bold text-sm border-t border-black mt-1 pt-1">
                 <span>TOTAL</span>
                 <span>{formatCurrency(order.total)}</span>
               </div>
+
               <div className="flex justify-between mt-2 text-gray-600">
                 <span>Payment</span>
                 <span className="font-medium">{order.paymentMethod}</span>
@@ -201,6 +145,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
             className="flex-1 py-3 px-4 rounded-lg font-medium border border-gray-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
             Close
           </button>
+
           <button
             onClick={handlePrint}
             className="flex-1 py-3 px-4 rounded-lg font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors flex items-center justify-center gap-2">

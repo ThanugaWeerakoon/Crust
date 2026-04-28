@@ -14,10 +14,10 @@
     visibility: visible;
   }
 
-  #printable-receipt {
+  /* #printable-receipt {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
-  }
+  } */
 }

@@ -66,7 +66,7 @@ const handlePrint = () => {
   printWindow.document.close();
   printWindow.focus();
 
-  // Wait for images to load before printing
+  
   printWindow.onload = () => {
     printWindow.print();
     printWindow.close();

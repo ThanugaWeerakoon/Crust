@@ -10,112 +10,29 @@ interface ReceiptProps {
 
 export function Receipt({ order, onClose }: ReceiptProps) {
 
-  // ✅ Moved above handlePrint so it's available in JSX
   const formatCurrency = (amount: number) => {
     return `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
   };
 
   const handlePrint = () => {
-    const printContents = document.getElementById("printable-receipt")?.innerHTML;
+    const printContents = document.getElementById("printable-receipt");
     if (!printContents) return;
 
-    const printWindow = window.open("", "_blank", "width=400,height=700");
-    if (!printWindow) {
-      alert("Pop-up blocked. Please allow pop-ups for this site and try again.");
-      return;
-    }
+    const originalContents = document.body.innerHTML;
 
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Receipt - ${order.id}</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body {
-              font-family: 'Courier New', Courier, monospace;
-              font-size: 13px;
-              color: #000;
-              background: #fff;
-              padding: 12px;
-              width: 100%;
-            }
-            .text-center { text-align: center; }
-            .text-right  { text-align: right; }
-            .flex        { display: flex; }
-            .justify-between { justify-content: space-between; }
-            .justify-center  { justify-content: center; }
-            .mb-1  { margin-bottom: 4px; }
-            .mb-2  { margin-bottom: 8px; }
-            .mb-3  { margin-bottom: 12px; }
-            .mt-1  { margin-top: 4px; }
-            .mt-2  { margin-top: 8px; }
-            .pt-1  { padding-top: 4px; }
-            .py-2  { padding-top: 8px; padding-bottom: 8px; }
-            .pb-1  { padding-bottom: 4px; }
-            .pr-1  { padding-right: 4px; }
-            .text-xs   { font-size: 11px; }
-            .text-sm   { font-size: 12px; }
-            .text-base { font-size: 14px; }
-            .font-bold   { font-weight: bold; }
-            .font-medium { font-weight: 600; }
-            .italic      { font-style: italic; }
-            .text-gray-500 { color: #6b7280; }
-            .text-gray-600 { color: #4b5563; }
-            .border-t        { border-top: 1px solid; }
-            .border-dashed   { border-style: dashed !important; }
-            .border-gray-400 { border-color: #9ca3af; }
-            .border-gray-800 { border-color: #1f2937; }
-            .logo-wrap { display: flex; justify-content: center; margin-bottom: 4px; }
-            .logo-wrap img { height: 88px; width: 88px; object-fit: contain; }
-            table { width: 100%; border-collapse: collapse; font-size: 12px; }
-            th { text-align: left; padding-bottom: 4px; font-weight: bold; }
-            th:last-child { text-align: right; }
-            td { padding: 2px 0; vertical-align: top; }
-            td:last-child { text-align: right; white-space: nowrap; }
-            .section { border-top: 1px dashed #9ca3af; padding: 8px 0; margin-bottom: 8px; }
-            .total-row {
-              display: flex; justify-content: space-between;
-              font-size: 15px; font-weight: bold;
-              border-top: 1px solid #1f2937;
-              padding-top: 4px; margin-top: 4px;
-            }
-            .footer { text-align: center; font-size: 12px; margin-top: 8px; }
-            @media print {
-              @page { size: 80mm auto; margin: 0; }
-              body { width: 80mm; padding: 8px; }
-            }
-          </style>
-        </head>
-        <body>
-          ${printContents}
-        </body>
-      </html>
-    `);
+    // Replace body with receipt
+    document.body.innerHTML = printContents.innerHTML;
 
-    printWindow.document.close();
+    // Small delay helps on tablets
+    setTimeout(() => {
+      window.print();
 
-    const img = printWindow.document.querySelector("img");
+      // Restore original UI after printing
+      document.body.innerHTML = originalContents;
 
-    if (img && !img.complete) {
-      img.onload = () => {
-        printWindow.focus();
-        printWindow.print();
-        printWindow.onafterprint = () => printWindow.close();
-      };
-      img.onerror = () => {
-        printWindow.focus();
-        printWindow.print();
-        printWindow.onafterprint = () => printWindow.close();
-      };
-    } else {
-      setTimeout(() => {
-        printWindow.focus();
-        printWindow.print();
-        printWindow.onafterprint = () => printWindow.close();
-      }, 300);
-    }
+      // Reload to restore React state properly
+      window.location.reload();
+    }, 300);
   };
 
   return (
@@ -136,7 +53,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
 
             {/* Logo */}
             <div className="text-center mb-3">
-              <div className="logo-wrap flex justify-center mb-1">
+              <div className="flex justify-center mb-1">
                 <img
                   src={LOGO_URL}
                   alt="CRUST Logo"
@@ -146,7 +63,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
             </div>
 
             {/* Order Info */}
-            <div className="section text-xs">
+            <div className="border-t border-dashed border-gray-400 py-2 text-xs">
               <div className="flex justify-between">
                 <span>Order ID:</span>
                 <span className="font-medium">{order.id}</span>
@@ -166,52 +83,60 @@ export function Receipt({ order, onClose }: ReceiptProps) {
             </div>
 
             {/* Items */}
-            <div className="section">
+            <div className="border-t border-dashed border-gray-400 py-2">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-left">
-                    <th className="pb-1">Qty</th>
-                    <th className="pb-1">Item</th>
-                    <th className="pb-1 text-right">Amount</th>
+                  <tr>
+                    <th className="text-left pb-1">Qty</th>
+                    <th className="text-left pb-1">Item</th>
+                    <th className="text-right pb-1">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {order.items.map((item, index) =>
+                  {order.items.map((item, index) => (
                     <tr key={index}>
                       <td className="py-0.5">{item.quantity}</td>
                       <td className="py-0.5 pr-1">
                         <div>{item.name}</div>
-                        {item.notes &&
-                          <div className="text-[10px] text-gray-500 italic">{item.notes}</div>
-                        }
+                        {item.notes && (
+                          <div className="text-[10px] text-gray-500 italic">
+                            {item.notes}
+                          </div>
+                        )}
                       </td>
-                      <td className="py-0.5 text-right">{formatCurrency(item.price * item.quantity)}</td>
+                      <td className="py-0.5 text-right">
+                        {formatCurrency(item.price * item.quantity)}
+                      </td>
                     </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
 
             {/* Totals */}
-            <div className="section text-xs">
+            <div className="border-t border-dashed border-gray-400 py-2 text-xs">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span>{formatCurrency(order.subtotal)}</span>
               </div>
-              {order.discount > 0 &&
+
+              {order.discount > 0 && (
                 <div className="flex justify-between text-gray-600">
                   <span>Discount</span>
                   <span>-{formatCurrency(order.discount)}</span>
                 </div>
-              }
+              )}
+
               <div className="flex justify-between">
                 <span>Service (10%)</span>
                 <span>{formatCurrency(order.tax)}</span>
               </div>
-              <div className="total-row">
+
+              <div className="flex justify-between font-bold text-sm border-t border-black mt-1 pt-1">
                 <span>TOTAL</span>
                 <span>{formatCurrency(order.total)}</span>
               </div>
+
               <div className="flex justify-between mt-2 text-gray-600">
                 <span>Payment</span>
                 <span className="font-medium">{order.paymentMethod}</span>
@@ -219,7 +144,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
             </div>
 
             {/* Footer */}
-            <div className="footer text-center text-xs">
+            <div className="text-center text-xs mt-2">
               <p className="font-medium">Thank you!</p>
               <p className="text-gray-500">Visit again</p>
             </div>
@@ -234,6 +159,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
             className="flex-1 py-3 px-4 rounded-lg font-medium border border-gray-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
             Close
           </button>
+
           <button
             onClick={handlePrint}
             className="flex-1 py-3 px-4 rounded-lg font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors flex items-center justify-center gap-2">

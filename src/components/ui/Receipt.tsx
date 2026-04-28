@@ -26,7 +26,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
       <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
 
         {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-slate-800">
+        <div className="flex justify-between items-center p-1 border-b border-gray-200 dark:border-slate-800">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">Receipt Preview</h2>
           <button onClick={onClose} className="p-2 text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">
             <XIcon className="h-5 w-5" />

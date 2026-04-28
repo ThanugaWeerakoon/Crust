@@ -40,11 +40,7 @@ const handlePrint = () => {
             {/* Logo */}
             <div className="text-center mb-3">
               <div className="flex justify-center mb-1">
-                <img
-                  src={LOGO_URL}
-                  alt="CRUST Logo"
-                  className="h-24 w-24 object-contain"
-                />
+             
               </div>
             </div>
 

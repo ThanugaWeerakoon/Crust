@@ -10,111 +10,113 @@ interface ReceiptProps {
 
 export function Receipt({ order, onClose }: ReceiptProps) {
 
- const handlePrint = () => {
-  const printContents = document.getElementById("printable-receipt")?.innerHTML;
-  if (!printContents) return;
+  // ✅ Moved above handlePrint so it's available in JSX
+  const formatCurrency = (amount: number) => {
+    return `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
+  };
 
-  const printWindow = window.open("", "_blank", "width=400,height=700");
-  if (!printWindow) {
-    alert("Pop-up blocked. Please allow pop-ups for this site and try again.");
-    return;
-  }
+  const handlePrint = () => {
+    const printContents = document.getElementById("printable-receipt")?.innerHTML;
+    if (!printContents) return;
 
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Receipt - ${order.id}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 13px;
-            color: #000;
-            background: #fff;
-            padding: 12px;
-            width: 100%;
-          }
-          .text-center { text-align: center; }
-          .text-right  { text-align: right; }
-          .flex        { display: flex; }
-          .justify-between { justify-content: space-between; }
-          .justify-center  { justify-content: center; }
-          .mb-1  { margin-bottom: 4px; }
-          .mb-2  { margin-bottom: 8px; }
-          .mb-3  { margin-bottom: 12px; }
-          .mt-1  { margin-top: 4px; }
-          .mt-2  { margin-top: 8px; }
-          .pt-1  { padding-top: 4px; }
-          .py-2  { padding-top: 8px; padding-bottom: 8px; }
-          .pb-1  { padding-bottom: 4px; }
-          .pr-1  { padding-right: 4px; }
-          .text-xs   { font-size: 11px; }
-          .text-sm   { font-size: 12px; }
-          .text-base { font-size: 14px; }
-          .font-bold   { font-weight: bold; }
-          .font-medium { font-weight: 600; }
-          .italic      { font-style: italic; }
-          .text-gray-500 { color: #6b7280; }
-          .text-gray-600 { color: #4b5563; }
-          .border-t        { border-top: 1px solid; }
-          .border-dashed   { border-style: dashed !important; }
-          .border-gray-400 { border-color: #9ca3af; }
-          .border-gray-800 { border-color: #1f2937; }
-          .logo-wrap { display: flex; justify-content: center; margin-bottom: 4px; }
-          .logo-wrap img { height: 88px; width: 88px; object-fit: contain; }
-          table { width: 100%; border-collapse: collapse; font-size: 12px; }
-          th { text-align: left; padding-bottom: 4px; font-weight: bold; }
-          th:last-child { text-align: right; }
-          td { padding: 2px 0; vertical-align: top; }
-          td:last-child { text-align: right; white-space: nowrap; }
-          .section { border-top: 1px dashed #9ca3af; padding: 8px 0; margin-bottom: 8px; }
-          .total-row {
-            display: flex; justify-content: space-between;
-            font-size: 15px; font-weight: bold;
-            border-top: 1px solid #1f2937;
-            padding-top: 4px; margin-top: 4px;
-          }
-          .footer { text-align: center; font-size: 12px; margin-top: 8px; }
-          @media print {
-            @page { size: 80mm auto; margin: 0; }
-            body { width: 80mm; padding: 8px; }
-          }
-        </style>
-      </head>
-      <body>
-        ${printContents}
-      </body>
-    </html>
-  `);
+    const printWindow = window.open("", "_blank", "width=400,height=700");
+    if (!printWindow) {
+      alert("Pop-up blocked. Please allow pop-ups for this site and try again.");
+      return;
+    }
 
-  printWindow.document.close();
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Receipt - ${order.id}</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+              font-family: 'Courier New', Courier, monospace;
+              font-size: 13px;
+              color: #000;
+              background: #fff;
+              padding: 12px;
+              width: 100%;
+            }
+            .text-center { text-align: center; }
+            .text-right  { text-align: right; }
+            .flex        { display: flex; }
+            .justify-between { justify-content: space-between; }
+            .justify-center  { justify-content: center; }
+            .mb-1  { margin-bottom: 4px; }
+            .mb-2  { margin-bottom: 8px; }
+            .mb-3  { margin-bottom: 12px; }
+            .mt-1  { margin-top: 4px; }
+            .mt-2  { margin-top: 8px; }
+            .pt-1  { padding-top: 4px; }
+            .py-2  { padding-top: 8px; padding-bottom: 8px; }
+            .pb-1  { padding-bottom: 4px; }
+            .pr-1  { padding-right: 4px; }
+            .text-xs   { font-size: 11px; }
+            .text-sm   { font-size: 12px; }
+            .text-base { font-size: 14px; }
+            .font-bold   { font-weight: bold; }
+            .font-medium { font-weight: 600; }
+            .italic      { font-style: italic; }
+            .text-gray-500 { color: #6b7280; }
+            .text-gray-600 { color: #4b5563; }
+            .border-t        { border-top: 1px solid; }
+            .border-dashed   { border-style: dashed !important; }
+            .border-gray-400 { border-color: #9ca3af; }
+            .border-gray-800 { border-color: #1f2937; }
+            .logo-wrap { display: flex; justify-content: center; margin-bottom: 4px; }
+            .logo-wrap img { height: 88px; width: 88px; object-fit: contain; }
+            table { width: 100%; border-collapse: collapse; font-size: 12px; }
+            th { text-align: left; padding-bottom: 4px; font-weight: bold; }
+            th:last-child { text-align: right; }
+            td { padding: 2px 0; vertical-align: top; }
+            td:last-child { text-align: right; white-space: nowrap; }
+            .section { border-top: 1px dashed #9ca3af; padding: 8px 0; margin-bottom: 8px; }
+            .total-row {
+              display: flex; justify-content: space-between;
+              font-size: 15px; font-weight: bold;
+              border-top: 1px solid #1f2937;
+              padding-top: 4px; margin-top: 4px;
+            }
+            .footer { text-align: center; font-size: 12px; margin-top: 8px; }
+            @media print {
+              @page { size: 80mm auto; margin: 0; }
+              body { width: 80mm; padding: 8px; }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContents}
+        </body>
+      </html>
+    `);
 
-  // Wait for the logo image to load, then print
-  const img = printWindow.document.querySelector("img");
+    printWindow.document.close();
 
-  if (img && !img.complete) {
-    img.onload = () => {
-      printWindow.focus();
-      printWindow.print();
-      printWindow.onafterprint = () => printWindow.close();
-    };
-    img.onerror = () => {
-      // Print anyway even if image fails
-      printWindow.focus();
-      printWindow.print();
-      printWindow.onafterprint = () => printWindow.close();
-    };
-  } else {
-    // Image already loaded or no image — print immediately
-    setTimeout(() => {
-      printWindow.focus();
-      printWindow.print();
-      printWindow.onafterprint = () => printWindow.close();
-    }, 300);
-  }
-};
+    const img = printWindow.document.querySelector("img");
+
+    if (img && !img.complete) {
+      img.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.onafterprint = () => printWindow.close();
+      };
+      img.onerror = () => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.onafterprint = () => printWindow.close();
+      };
+    } else {
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.onafterprint = () => printWindow.close();
+      }, 300);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">

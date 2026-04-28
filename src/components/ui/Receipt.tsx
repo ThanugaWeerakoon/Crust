@@ -1,197 +1,74 @@
-import { Order } from '../../types';
-import { PrinterIcon, XIcon } from 'lucide-react';
+const handlePrint = () => {
+  const printContents = document.getElementById("printable-receipt")?.innerHTML;
+  if (!printContents) return;
 
-// Replace with your actual hosted image URL
-const LOGO_URL = "https://bheduvpljuxhovkeqtye.supabase.co/storage/v1/object/public/artists/LogoRec.jpeg";
+  const printWindow = window.open("", "_blank", "width=400,height=600");
+  if (!printWindow) return;
 
-interface ReceiptProps {
-  order: Omit<Order, "firestoreId">;
-  onClose: () => void;
-}
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Receipt</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            width: 300px;
+            padding: 10px;
+            color: #000;
+          }
+          img { max-width: 100%; height: auto; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { padding: 2px 0; }
+          .text-right { text-align: right; }
+          .text-center { text-align: center; }
+          .font-bold { font-weight: bold; }
+          .font-medium { font-weight: 500; }
+          .text-base { font-size: 14px; }
+          .text-xs { font-size: 11px; }
+          .text-\\[10px\\] { font-size: 10px; }
+          .text-gray-500 { color: #6b7280; }
+          .text-gray-600 { color: #4b5563; }
+          .italic { font-style: italic; }
+          .border-t { border-top: 1px solid; }
+          .border-gray-800 { border-color: #1f2937; }
+          .py-2 { padding-top: 8px; padding-bottom: 8px; }
+          .py-0\\.5 { padding-top: 2px; padding-bottom: 2px; }
+          .pt-1 { padding-top: 4px; }
+          .mt-1 { margin-top: 4px; }
+          .mt-2 { margin-top: 8px; }
+          .mb-2 { margin-bottom: 8px; }
+          .mb-3 { margin-bottom: 12px; }
+          .pb-1 { padding-bottom: 4px; }
+          .pr-1 { padding-right: 4px; }
+          .flex { display: flex; }
+          .justify-between { justify-content: space-between; }
+          .justify-center { justify-content: center; }
+          .border-dashed { border-style: dashed; }
+          .border-gray-400 { border-color: #9ca3af; }
+          .h-24 { height: 96px; }
+          .w-24 { width: 96px; }
+          .object-contain { object-fit: contain; }
+          @media print {
+            @page { margin: 0; size: 80mm auto; }
+            body { width: 100%; }
+          }
+        </style>
+      </head>
+      <body>
+        ${printContents}
+      </body>
+    </html>
+  `);
 
-export function Receipt({ order, onClose }: ReceiptProps) {
+  printWindow.document.close();
+  printWindow.focus();
 
-  const handlePrint = async () => {
-  const ESC = "\x1b";
-
-  // Fetch logo from Supabase and convert to base64
-  const getBase64Logo = async (): Promise<string> => {
-    const response = await fetch(LOGO_URL);
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    });
+  // Wait for images to load before printing
+  printWindow.onload = () => {
+    printWindow.print();
+    printWindow.close();
   };
-
-  const logoBase64 = await getBase64Logo();
-
-  let rawbtReceipt = "";
-
-  // Logo centered using base64
-  rawbtReceipt += "[C]<img>" + logoBase64 + "</img>\n";
-
-  // Header
-  rawbtReceipt += "[C]CRUST\n";
-  rawbtReceipt += "[C]Crust Pizza Ahangama\n";
-  rawbtReceipt += "[C]Tel: +94 77 074 7446\n\n";
-
-  // Left-align order info
-  rawbtReceipt += ESC + "a" + "\x00";
-  rawbtReceipt += `Order ID: ${order.id}\n`;
-  rawbtReceipt += `Date: ${new Date(order.date).toLocaleString()}\n`;
-  rawbtReceipt += `Cashier: ${order.cashier}\n`;
-  rawbtReceipt += `Type: ${order.isTakeaway ? "TAKEAWAY" : `TABLE ${order.tableNumber}`}\n`;
-  rawbtReceipt += "-------------------------------\n";
-
-  order.items.forEach(item => {
-    const qty = item.quantity.toString().padEnd(3, " ");
-    const name = item.name.padEnd(20, " ");
-    const amount = (item.price * item.quantity).toFixed(2).padStart(7, " ");
-    rawbtReceipt += `${qty} ${name}${amount}\n`;
-    if (item.notes) {
-      rawbtReceipt += `  Note: ${item.notes}\n`;
-    }
-  });
-
-  rawbtReceipt += "-------------------------------\n";
-
-  rawbtReceipt += `Subtotal: ${order.subtotal.toFixed(2)}\n`;
-  if (order.discount > 0) rawbtReceipt += `Discount: -${order.discount.toFixed(2)}\n`;
-  rawbtReceipt += `Service Charge (10%): ${order.tax.toFixed(2)}\n`;
-  rawbtReceipt += `TOTAL: ${order.total.toFixed(2)}\n`;
-  rawbtReceipt += `Payment Method: ${order.paymentMethod}\n\n`;
-
-  rawbtReceipt += "[C]Thank you for dining with us!\n";
-  rawbtReceipt += "[C]Please come again.\n\n\n";
-
-  window.open(`rawbt://${encodeURIComponent(rawbtReceipt)}`);
 };
-
-
-  const formatCurrency = (amount: number) => {
-    return `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-
-        {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-slate-800 print:hidden">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Receipt Preview</h2>
-          <button onClick={onClose} className="p-2 text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">
-            <XIcon className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="print-area p-2 bg-white text-black" id="printable-receipt">
-
-          {/* Logo - uses the online URL */}
-          <div className="text-center mb-3">
-            <div className="flex justify-center mb-1">
-              <img
-                src={LOGO_URL}
-                alt="CRUST Logo"
-                className="h-24 w-24 object-contain"
-              />
-            </div>
-          </div>
-
-          <div className="border-t border-dashed border-gray-400 py-2 mb-2 text-xs">
-            <div className="flex justify-between">
-              <span>Order ID:</span>
-              <span className="font-medium">{order.id}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Date:</span>
-              <span>{new Date(order.date).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Cashier:</span>
-              <span>{order.cashier}</span>
-            </div>
-            <div className="flex justify-between font-bold mt-1 text-sm">
-              <span>Type:</span>
-              <span>{order.isTakeaway ? 'TAKEAWAY' : `TABLE ${order.tableNumber}`}</span>
-            </div>
-          </div>
-
-          <div className="border-t border-dashed border-gray-400 py-2 mb-2">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="text-left">
-                  <th className="pb-1">Qty</th>
-                  <th className="pb-1">Item</th>
-                  <th className="pb-1 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.items.map((item, index) =>
-                  <tr key={index}>
-                    <td className="py-0.5">{item.quantity}</td>
-                    <td className="py-0.5 pr-1">
-                      <div>{item.name}</div>
-                      {item.notes &&
-                        <div className="text-[10px] text-gray-500 italic">{item.notes}</div>
-                      }
-                    </td>
-                    <td className="py-0.5 text-right">{formatCurrency(item.price * item.quantity)}</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="border-t border-dashed border-gray-400 py-2 mb-2 text-xs">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>{formatCurrency(order.subtotal)}</span>
-            </div>
-            {order.discount > 0 &&
-              <div className="flex justify-between text-gray-600">
-                <span>Discount</span>
-                <span>-{formatCurrency(order.discount)}</span>
-              </div>
-            }
-            <div className="flex justify-between">
-              <span>Service (10%)</span>
-              <span>{formatCurrency(order.tax)}</span>
-            </div>
-            <div className="flex justify-between text-base font-bold border-t border-gray-800 pt-1 mt-1">
-              <span>TOTAL</span>
-              <span>{formatCurrency(order.total)}</span>
-            </div>
-            <div className="flex justify-between mt-2 text-gray-600">
-              <span>Payment</span>
-              <span className="font-medium">{order.paymentMethod}</span>
-            </div>
-          </div>
-
-          <div className="text-center text-xs">
-            <p className="font-medium">Thank you!</p>
-            <p className="text-gray-500">Visit again</p>
-          </div>
-
-        </div>
-
-        {/* Footer Actions */}
-        <div className="p-4 border-t border-gray-200 dark:border-slate-800 flex gap-3 print:hidden">
-          <button
-            onClick={onClose}
-            className="flex-1 py-3 px-4 rounded-lg font-medium border border-gray-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-            Close
-          </button>
-                <button
-            onClick={() => handlePrint()}
-            className="flex-1 py-3 px-4 rounded-lg font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors flex items-center justify-center gap-2">
-            <PrinterIcon className="h-5 w-5" />
-            Print Receipt
-          </button>
-        </div>
-
-      </div>
-    </div>
-  );
-}

@@ -1,7 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@media print {
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+  /* Hide everything */
+  body * {
+    visibility: hidden;
+  }
 
+  /* Hide the modal backdrop and UI chrome */
+  body > * {
+    display: none !important;
+  }
 
+  /* Show only the receipt */
+  #printable-receipt {
+    display: block !important;
+    visibility: visible !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80mm;
+    margin: 0;
+    padding: 0;
+  }
+
+  #printable-receipt * {
+    visibility: visible !important;
+  }
+
+  .print-area {
+    overflow: visible !important;
+    height: auto !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+}

@@ -17,7 +17,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
 const handlePrint = () => {
   setTimeout(() => {
     window.print();
-  }, 300);
+  }, 100);
 };
 
 
@@ -36,10 +36,10 @@ const handlePrint = () => {
         {/* Scrollable preview */}
        <div className="flex-1">
           <div className="print-area p-2 bg-white text-black" id="printable-receipt">
-
+            
             {/* Logo */}
-            <div className="text-center mb-3">
-              <div className="flex justify-center mb-1">
+            <div className="text-center"> {/* removed mb-3 */}
+              <div className="flex justify-center">
                 <img
                   src={LOGO_URL}
                   alt="CRUST Logo"

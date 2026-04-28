@@ -6,6 +6,7 @@
 
 
 @media print {
+
   body * {
     visibility: hidden;
   }
@@ -16,8 +17,26 @@
 
   #printable-receipt {
     position: absolute;
-    left: 0;
     top: 0;
-    width: 100%;
+    left: 0;
+    width: 80mm;
+  }
+
+  /* 🔥 CRITICAL FIXES */
+  .print-area {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  div {
+    page-break-inside: avoid;
   }
 }

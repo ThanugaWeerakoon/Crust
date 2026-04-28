@@ -14,16 +14,16 @@ export function Receipt({ order, onClose }: ReceiptProps) {
     return `LKR ${amount.toLocaleString('en-LK', { minimumFractionDigits: 2 })}`;
   };
 
-  const handlePrint = () => {
+const handlePrint = () => {
   setTimeout(() => {
     window.print();
-  }, 200);
+  }, 300);
 };
 
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
 
         {/* Header */}
         <div className="flex justify-between items-center p-1 border-b border-gray-200 dark:border-slate-800">
@@ -34,7 +34,7 @@ export function Receipt({ order, onClose }: ReceiptProps) {
         </div>
 
         {/* Scrollable preview */}
-        <div className="overflow-y-auto flex-1">
+       <div className="flex-1">
           <div className="print-area p-2 bg-white text-black" id="printable-receipt">
 
             {/* Logo */}

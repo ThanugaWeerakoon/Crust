@@ -5,38 +5,3 @@
 @import 'tailwindcss/utilities';
 
 
-@media print {
-
-  body * {
-    visibility: hidden;
-  }
-
-  #printable-receipt, #printable-receipt * {
-    visibility: visible;
-  }
-
-  #printable-receipt {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80mm;
-  }
-
-
-  .print-area {
-    overflow: visible !important;
-    height: auto !important;
-  }
-
-  table {
-    page-break-inside: avoid;
-  }
-
-  tr {
-    page-break-inside: avoid;
-  }
-
-  div {
-    page-break-inside: avoid;
-  }
-}

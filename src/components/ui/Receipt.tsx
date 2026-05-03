@@ -1,7 +1,7 @@
 import { Order } from '../../types';
 import { PrinterIcon, XIcon } from 'lucide-react';
 
-const LOGO_URL = "https://bheduvpljuxhovkeqtye.supabase.co/storage/v1/object/public/artists/LogoRec.jpeg";
+import LOGO_URL from "../../../assets/LogoRec.jpeg"
 
 interface ReceiptProps {
   order: Omit<Order, "firestoreId">;
@@ -25,7 +25,7 @@ const handlePrint = () => {
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
 
-        {/* Header */}
+      
         <div className="flex justify-between items-center p-1 border-b border-gray-200  dark:border-slate-800">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">Receipt Preview</h2>
           <button onClick={onClose} className="p-2 text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">
@@ -33,12 +33,12 @@ const handlePrint = () => {
           </button>
         </div>
 
-        {/* Scrollable preview */}
+     
        <div className="flex-1">
           <div className="print-area p-2 bg-white text-black" id="printable-receipt">
             
             {/* Logo */}
-            <div className="text-center"> {/* removed mb-3 */}
+            <div className="text-center">
               <div className="flex justify-center">
                 <img
                   src={LOGO_URL}

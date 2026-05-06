@@ -51,7 +51,7 @@ export interface Order {
 export interface Staff {
   id: string;
   name: string;
-  role: 'Admin' | 'Cashier' | 'Manager';
+  role: 'Admin' | 'Cashier' | 'Biller';
   email: string;
   phone: string;
   status: 'Active' | 'Inactive';

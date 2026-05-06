@@ -21,11 +21,15 @@ const categories = [
 interface SidebarProps {
   activeCategory: string;
   setActiveCategory: (cat: string) => void;
+  userName: string | null;
+  userRole: string | null;
 }
 
 export function Sidebar({
   activeCategory,
-  setActiveCategory
+  setActiveCategory,
+  userName,
+  userRole
 }: SidebarProps) {
 
   return (
@@ -78,15 +82,15 @@ export function Sidebar({
       {/* User Info */}
       <div className="p-4 border-t border-gray-200 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-slate-800 flex items-center justify-center text-amber-600 dark:text-amber-500 font-bold">
-            KP
+          <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-slate-800 flex items-center justify-center text-amber-600 dark:text-amber-500 font-bold uppercase">
+            {userName ? userName.substring(0, 2) : '??'}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
-              Chamod
+              {userName || 'User'}
             </p>
             <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-              Supervisor
+              {userRole || 'Staff'}
             </p>
           </div>
         </div>

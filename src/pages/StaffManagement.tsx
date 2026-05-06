@@ -143,7 +143,7 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
                   <td className="p-4">
                     <span
                     className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
-                      ${member.role === 'Admin' ? 'bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-400' : member.role === 'Manager' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-400' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400'}`}>
+                      ${member.role === 'Admin' ? 'bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-400' : member.role === 'Cashier' ? 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-400' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400'}`}>
 
                       {member.role}
                     </span>
@@ -269,8 +269,8 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
                   className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500">
 
                     <option value="Admin">Admin</option>
-                    <option value="Manager">Manager</option>
                     <option value="Cashier">Cashier</option>
+                    <option value="Biller">Biller</option>
                   </select>
                 </div>
               </div>

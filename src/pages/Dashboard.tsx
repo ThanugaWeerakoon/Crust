@@ -4,7 +4,8 @@ import {
   BanknoteIcon,
   ShoppingCartIcon,
   UsersIcon,
-  TrendingUpIcon } from
+  TrendingUpIcon,
+  PercentIcon } from
 'lucide-react';
 import {
   AreaChart,
@@ -36,6 +37,11 @@ export function Dashboard({ orders }: DashboardProps) {
   `LKR ${amount.toLocaleString('en-LK', {
     maximumFractionDigits: 0
   })}`;
+
+  const totalServiceCharges = orders
+    .filter((o) => o.status === 'Completed')
+    .reduce((sum, o) => sum + (o.tax || 0), 0);
+
 
   
 
@@ -93,7 +99,15 @@ export function Dashboard({ orders }: DashboardProps) {
     icon: TrendingUpIcon,
     color: 'text-purple-500',
     bg: 'bg-purple-100 dark:bg-purple-500/10'
+  },
+  {
+    label: 'Total Service Charges',
+    value: formatCurrency(totalServiceCharges),
+    icon: PercentIcon,
+    color: 'text-rose-500',
+    bg: 'bg-rose-100 dark:bg-rose-500/10'
   }];
+
 
 
 const chartData = Array.from({ length: 7 }).map((_, index) => {
@@ -119,7 +133,8 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
   return (
     <div className="p-4 lg:p-8 space-y-6 max-w-7xl mx-auto">
       {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+
         {stats.map((stat, i) => {
           const Icon = stat.icon;
           return (

@@ -250,18 +250,20 @@ export function POSOrder({
     setShowSplitModal(false);
   };
 
-const filteredItems = useMemo(() => {
-  return menuItems.filter((item) => {
-    const matchesCategory =
-      activeCategory === "All" || item.category === activeCategory;
+  const filteredItems = useMemo(() => {
+    return menuItems
+      .filter((item) => {
+        const matchesCategory =
+          activeCategory === "All" || item.category === activeCategory;
 
-    const matchesSearch = item.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+        const matchesSearch = item.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
 
-    return matchesCategory && matchesSearch;
-  });
-}, [menuItems, activeCategory, searchQuery]);
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [menuItems, activeCategory, searchQuery]);
 
   return (
     <div className="flex flex-col lg:flex-row h-[calc(90vh-64px)] bg-gray-50 dark:bg-slate-900 overflow-hidden">

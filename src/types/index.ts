@@ -13,7 +13,8 @@ export type Category =
   | 'From the Grill'
   | 'To Share'
   | 'Salads'
-  | 'Sweets';
+  | 'Sweets'
+  | 'Shots'
 
 export interface MenuItem {
   id: string;

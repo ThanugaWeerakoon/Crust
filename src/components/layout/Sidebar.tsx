@@ -16,6 +16,7 @@ const categories = [
   "Soft Drinks",
   "Sweets",
   "Wines",
+  "Shots",
 ];
 
 interface SidebarProps {

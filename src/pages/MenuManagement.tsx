@@ -58,7 +58,8 @@ export default function MenuManagement({
     "From the Grill",
     "To Share",
     "Salads",
-    "Sweets"
+    "Sweets",
+    "Shots"
   ];
 
 

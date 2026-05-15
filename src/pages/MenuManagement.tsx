@@ -177,15 +177,15 @@ export default function MenuManagement({
             placeholder="Search menu items..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg"
+            className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-lg"
           />
         </div>
 
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 bg-amber-500 text-white px-6 py-2.5 rounded-lg"
+          className="flex items-center gap-2 bg-amber-500 text-white px-6 py-3 rounded-lg text-lg font-bold transition-all hover:scale-105 active:scale-95 shadow-lg"
         >
-          <PlusIcon className="h-5 w-5" />
+          <PlusIcon className="h-6 w-6" />
           Add New Item
         </button>
       </div>
@@ -194,24 +194,31 @@ export default function MenuManagement({
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr>
-              <th className="p-4">Name</th>
-              <th className="p-4">Category</th>
-              <th className="p-4">Price</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Actions</th>
+            <tr className="bg-gray-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-lg border-b border-gray-200 dark:border-slate-700">
+              <th className="p-4 font-bold">Name</th>
+              <th className="p-4 font-bold">Category</th>
+              <th className="p-4 font-bold">Price</th>
+              <th className="p-4 font-bold">Status</th>
+              <th className="p-4 font-bold">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredItems.map((item: MenuItem) => (
               <tr key={item.id}>
-                <td className="text-center">{item.name}</td>
-                <td className="text-center">{item.category}</td>
-                <td className="text-center">{formatCurrency(item.price)}</td>
+                <td className="p-4 text-center text-base font-medium">{item.name}</td>
+                <td className="p-4 text-center text-base">{item.category}</td>
+                <td className="p-4 text-center text-base font-bold text-amber-600 dark:text-amber-400">{formatCurrency(item.price)}</td>
 
-                <td className="text-center">
-                  <button onClick={() => toggleAvailability(item.id)}>
+                <td className="p-4 text-center">
+                  <button 
+                    onClick={() => toggleAvailability(item.id)}
+                    className={`px-3 py-1 rounded-full text-sm font-bold transition-colors ${
+                      item.available 
+                        ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400" 
+                        : "bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-400"
+                    }`}
+                  >
                     {item.available ? "Available" : "Out of Stock"}
                   </button>
                 </td>
@@ -238,7 +245,7 @@ export default function MenuManagement({
     <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-full max-w-md space-y-4">
 
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-2xl font-bold">
           {editingId ? "Edit Menu Item" : "Add Menu Item"}
         </h2>
 

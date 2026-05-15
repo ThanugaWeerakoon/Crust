@@ -34,13 +34,13 @@ export const Login: React.FC = () => {
             <div className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20">
               <LogIn className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">CRUST</h1>
-            <p className="text-slate-400 mt-2 text-center text-sm">Welcome back! Please enter your details to continue.</p>
+            <h1 className="text-4xl font-bold text-white tracking-tight">CRUST</h1>
+            <p className="text-slate-400 mt-2 text-center text-base">Welcome back! Please enter your details to continue.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300 ml-1">Email Address</label>
+              <label className="text-base font-bold text-slate-300 ml-1">Email Address</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-500 transition-colors">
                   <Mail className="w-5 h-5" />
@@ -50,14 +50,14 @@ export const Login: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="w-full pl-12 pr-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-lg"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300 ml-1">Password</label>
+              <label className="text-base font-bold text-slate-300 ml-1">Password</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-500 transition-colors">
                   <Lock className="w-5 h-5" />
@@ -67,7 +67,7 @@ export const Login: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-12 pr-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-lg"
                   required
                 />
               </div>
@@ -97,8 +97,8 @@ export const Login: React.FC = () => {
           </form>
 
           <div className="mt-8 pt-6 border-t border-slate-800 text-center">
-            <p className="text-slate-500 text-xs">
-              Powered by <span className="text-slate-400 font-medium">LegionCode IT Solutions</span>
+            <p className="text-slate-500 text-sm">
+              Powered by <span className="text-slate-400 font-bold">LegionCode IT Solutions</span>
             </p>
           </div>
         </div>

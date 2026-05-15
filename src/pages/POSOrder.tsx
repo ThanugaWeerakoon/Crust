@@ -58,6 +58,7 @@ export function POSOrder({
   }, [propEditingOrder]);
   const [showSavePopup, setShowSavePopup] = useState(false);
   const [tableName, setTableName] = useState("");
+  const [tableNameError, setTableNameError] = useState(false);
   // ---------------- Cart Operations ----------------
   const addToCart = (item: MenuItem) => {
     if (!item.available) return;
@@ -152,6 +153,12 @@ export function POSOrder({
 
   const handleSaveOrder = () => {
     if (cart.length === 0) return;
+    
+    if (!tableName.trim()) {
+      setTableNameError(true);
+      return;
+    }
+    setTableNameError(false);
 
     const orderData: Omit<Order, "firestoreId"> = {
       id:
@@ -302,11 +309,11 @@ export function POSOrder({
                   <UtensilsIcon className="h-8 w-8 text-amber-300 dark:text-slate-500" />
                 </div>
                 <div className="p-3 flex-1 flex flex-col justify-between">
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm line-clamp-2 leading-tight">
+                  <h3 className="font-bold text-slate-900 dark:text-white text-base line-clamp-2 leading-tight">
                     {item.name}
                   </h3>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="font-bold text-amber-600 dark:text-amber-400">
+                    <span className="font-bold text-amber-600 dark:text-amber-400 text-lg">
                       {formatCurrency(item.price)}
                     </span>
                   </div>
@@ -319,11 +326,10 @@ export function POSOrder({
 
       {/* RIGHT: Cart & Checkout */}
       <div className="w-full lg:w-[400px] xl:w-[450px] flex flex-col bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 h-full">
-        {/* Takeaway / Dine-in */}
         <div className="p-4 border-b border-gray-200 dark:border-slate-800 flex gap-2">
           <button
             onClick={() => setIsTakeaway(false)}
-            className={`flex-1 py-3 rounded-lg font-medium transition-colors min-h-[44px] ${
+            className={`flex-1 py-3 rounded-lg font-bold text-lg transition-colors min-h-[44px] ${
               !isTakeaway
                 ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border-2 border-amber-500"
                 : "bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-gray-400 border-2 border-transparent"
@@ -333,7 +339,7 @@ export function POSOrder({
           </button>
           <button
             onClick={() => setIsTakeaway(true)}
-            className={`flex-1 py-3 rounded-lg font-medium transition-colors min-h-[44px] ${
+            className={`flex-1 py-3 rounded-lg font-bold text-lg transition-colors min-h-[44px] ${
               isTakeaway
                 ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border-2 border-amber-500"
                 : "bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-gray-400 border-2 border-transparent"
@@ -358,10 +364,10 @@ export function POSOrder({
               >
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex-1 pr-2">
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">
+                    <h4 className="font-bold text-slate-900 dark:text-white text-base">
                       {item.name}
                     </h4>
-                    <p className="text-amber-600 dark:text-amber-400 font-medium text-sm">
+                    <p className="text-amber-600 dark:text-amber-400 font-bold text-base">
                       {formatCurrency(item.price)}
                     </p>
                   </div>
@@ -390,7 +396,7 @@ export function POSOrder({
                       <PlusIcon className="h-4 w-4" />
                     </button>
                   </div>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-bold text-slate-900 dark:text-white text-lg">
                     {formatCurrency(item.price * item.quantity)}
                   </span>
                 </div>
@@ -405,7 +411,7 @@ export function POSOrder({
             <select
               value={selectedDiscountId}
               onChange={(e) => setSelectedDiscountId(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg py-3 px-4 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500 min-h-[34px]"
+              className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg py-3 px-4 text-base text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500 min-h-[34px]"
             >
               <option value="">No Discount Applied</option>
               {discounts
@@ -420,7 +426,7 @@ export function POSOrder({
             </select>
           </div>
 
-          <div className="space-y-2 mb-4 text-sm">
+          <div className="space-y-3 mb-4 text-base">
             <div className="flex justify-between text-slate-600 dark:text-slate-400">
               <span>Subtotal</span>
               <span>{formatCurrency(subtotal)}</span>
@@ -449,7 +455,7 @@ export function POSOrder({
               <span>Service Charge (10%)</span>
               <span>{formatCurrency(tax)}</span>
             </div>
-            <div className="flex justify-between text-xl font-bold text-slate-900 dark:text-white pt-2 border-t border-gray-200 dark:border-slate-700">
+            <div className="flex justify-between text-2xl font-black text-slate-900 dark:text-white pt-2 border-t border-gray-200 dark:border-slate-700">
               <span>Total</span>
               <span className="text-amber-600 dark:text-amber-500">
                 {formatCurrency(total)}
@@ -480,18 +486,35 @@ export function POSOrder({
                     Save Order
                   </h2>
 
-                  <input
-                    type="text"
-                    value={tableName}
-                    onChange={(e) => setTableName(e.target.value)}
-                    placeholder="Table Name"
-                    className="w-full border border-gray-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  />
+                  <div className="space-y-1">
+                    <input
+                      type="text"
+                      value={tableName}
+                      onChange={(e) => {
+                        setTableName(e.target.value);
+                        if (e.target.value.trim()) setTableNameError(false);
+                      }}
+                      placeholder="Table Name"
+                      className={`w-full border rounded-lg p-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-all ${
+                        tableNameError 
+                          ? "border-rose-500 ring-2 ring-rose-500/20" 
+                          : "border-gray-300 dark:border-slate-700 focus:ring-2 focus:ring-amber-500"
+                      }`}
+                    />
+                    {tableNameError && (
+                      <p className="text-rose-500 text-xs font-bold ml-1 animate-pulse">
+                        ⚠️ Table name is required to save
+                      </p>
+                    )}
+                  </div>
 
                   <div className="flex justify-end gap-2">
                     <button
-                      onClick={() => setShowSavePopup(false)}
-                      className="px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg"
+                      onClick={() => {
+                        setShowSavePopup(false);
+                        setTableNameError(false);
+                      }}
+                      className="px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 font-medium"
                     >
                       Cancel
                     </button>

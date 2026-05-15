@@ -95,14 +95,14 @@ export function DiscountManagement({
   return (
     <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
           Active Discounts & Promotions
         </h2>
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors min-h-[44px]">
+          className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-lg min-h-[44px]">
 
-          <PlusIcon className="h-5 w-5" />
+          <PlusIcon className="h-6 w-6" />
           Create Discount
         </button>
       </div>
@@ -119,10 +119,10 @@ export function DiscountManagement({
                   <TagIcon className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white">
+                  <h3 className="font-bold text-slate-900 dark:text-white text-xl">
                     {discount.name}
                   </h3>
-                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
                     {discount.appliesTo === 'order' ?
                   'Entire Order' :
                   'Specific Items'}
@@ -141,21 +141,21 @@ export function DiscountManagement({
             </div>
 
             <div className="flex-1 space-y-3 mb-6">
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-base">
                 <span className="text-slate-500 dark:text-slate-400">
                   Value:
                 </span>
-                <span className="font-bold text-slate-900 dark:text-white text-lg">
+                <span className="font-black text-slate-900 dark:text-white text-2xl">
                   {discount.type === 'percentage' ?
                 `${discount.value}% OFF` :
                 `LKR ${discount.value} OFF`}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-base">
                 <span className="text-slate-500 dark:text-slate-400">
                   Valid From:
                 </span>
-                <span className="text-slate-900 dark:text-white">
+                <span className="text-slate-900 dark:text-white font-medium">
                   {discount.validFrom}
                 </span>
               </div>
@@ -172,15 +172,15 @@ export function DiscountManagement({
             <div className="flex gap-2 pt-4 border-t border-gray-100 dark:border-slate-700">
               <button
               onClick={() => openEditModal(discount)}
-              className="flex-1 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors flex items-center justify-center gap-2 min-h-[44px]">
+              className="flex-1 py-2 text-base font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors flex items-center justify-center gap-2 min-h-[44px]">
 
-                <EditIcon className="h-4 w-4" /> Edit
+                <EditIcon className="h-5 w-5" /> Edit
               </button>
               <button
               onClick={() => deleteDiscount(discount.id)}
-              className="flex-1 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors flex items-center justify-center gap-2 min-h-[44px]">
+              className="flex-1 py-2 text-base font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors flex items-center justify-center gap-2 min-h-[44px]">
 
-                <TrashIcon className="h-4 w-4" /> Delete
+                <TrashIcon className="h-5 w-5" /> Delete
               </button>
             </div>
           </div>

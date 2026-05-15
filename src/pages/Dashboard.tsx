@@ -148,10 +148,10 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
                 <Icon className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                <p className="text-base font-medium text-slate-500 dark:text-slate-400">
                   {stat.label}
                 </p>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                <p className="text-3xl font-bold text-slate-900 dark:text-white">
                   {stat.value}
                 </p>
               </div>
@@ -195,7 +195,7 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
                   tickLine={false}
                   tick={{
                     fill: '#64748b',
-                    fontSize: 12
+                    fontSize: 14
                   }}
                   dy={10} />
 
@@ -204,7 +204,7 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
                   tickLine={false}
                   tick={{
                     fill: '#64748b',
-                    fontSize: 12
+                    fontSize: 14
                   }}
                   tickFormatter={(val) => `LKR ${val / 1000}k`} />
 
@@ -252,10 +252,10 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
                     #{i + 1}
                   </div>
                   <div>
-                    <p className="font-medium text-slate-900 dark:text-white text-sm">
+                    <p className="font-bold text-slate-900 dark:text-white text-base">
                       {item.name}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       {item.qty} sold
                     </p>
                   </div>
@@ -281,7 +281,7 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-sm">
+              <tr className="bg-gray-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-base">
                 <th className="p-4 font-medium">Order ID</th>
                 <th className="p-4 font-medium">Time</th>
                 <th className="p-4 font-medium">Items</th>
@@ -295,25 +295,25 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
                 key={order.id}
                 className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
 
-                  <td className="p-4 text-sm font-medium text-slate-900 dark:text-white">
+                  <td className="p-4 text-base font-medium text-slate-900 dark:text-white">
                     {order.id}
                   </td>
-                  <td className="p-4 text-sm text-slate-600 dark:text-slate-300">
+                  <td className="p-4 text-base text-slate-600 dark:text-slate-300">
                     {new Date(order.date).toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit'
                   })}
                   </td>
-                  <td className="p-4 text-sm text-slate-600 dark:text-slate-300">
+                  <td className="p-4 text-base text-slate-600 dark:text-slate-300">
                     {order.items.reduce((sum, item) => sum + item.quantity, 0)}{' '}
                     items
                   </td>
-                  <td className="p-4 text-sm font-medium text-slate-900 dark:text-white">
+                  <td className="p-4 text-base font-medium text-slate-900 dark:text-white">
                     {formatCurrency(order.total)}
                   </td>
                   <td className="p-4">
                     <span
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium
                       ${order.status === 'Completed' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400' : order.status === 'Refunded' ? 'bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-400' : 'bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-400'}
                     `}>
 

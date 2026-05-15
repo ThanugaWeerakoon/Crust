@@ -97,14 +97,14 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
             placeholder="Search staff..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none" />
+            className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none text-lg" />
 
         </div>
         <button
           onClick={openAddModal}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors min-h-[44px]">
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-lg min-h-[44px]">
 
-          <PlusIcon className="h-5 w-5" />
+          <PlusIcon className="h-6 w-6" />
           Add Staff
         </button>
       </div>
@@ -113,12 +113,12 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-sm border-b border-gray-200 dark:border-slate-700">
-                <th className="p-4 font-medium">Name</th>
-                <th className="p-4 font-medium">Role</th>
-                <th className="p-4 font-medium">Contact</th>
-                <th className="p-4 font-medium">Status</th>
-                <th className="p-4 font-medium text-right">Actions</th>
+              <tr className="bg-gray-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-lg border-b border-gray-200 dark:border-slate-700">
+                <th className="p-4 font-bold">Name</th>
+                <th className="p-4 font-bold">Role</th>
+                <th className="p-4 font-bold">Contact</th>
+                <th className="p-4 font-bold">Status</th>
+                <th className="p-4 font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
@@ -135,7 +135,7 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
                       map((n) => n[0]).
                       join('')}
                       </div>
-                      <div className="font-medium text-slate-900 dark:text-white">
+                      <div className="font-bold text-slate-900 dark:text-white text-lg">
                         {member.name}
                       </div>
                     </div>
@@ -149,7 +149,7 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
                     </span>
                   </td>
                   <td className="p-4">
-                    <div className="text-sm text-slate-900 dark:text-white">
+                    <div className="text-base font-medium text-slate-900 dark:text-white">
                       {member.email}
                     </div>
                     <div className="text-sm text-slate-500 dark:text-slate-400">
@@ -159,7 +159,7 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
                   <td className="p-4">
                     <button
                     onClick={() => toggleStatus(member.id)}
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-colors min-h-[32px]
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold transition-colors min-h-[32px]
                         ${member.status === 'Active' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400 hover:bg-emerald-200' : 'bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-gray-400 hover:bg-gray-200'}`}>
 
                       {member.status}
@@ -191,7 +191,7 @@ export function StaffManagement({ staff, setStaff }: StaffManagementProps) {
       <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
             <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-slate-700">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 {editingId ? 'Edit Staff Member' : 'Add New Staff'}
               </h2>
               <button

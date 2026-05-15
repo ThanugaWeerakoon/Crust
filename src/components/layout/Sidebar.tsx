@@ -50,14 +50,14 @@ export function Sidebar({
             alt="CRUST Logo"
             className="h-12 w-12 object-contain"
           />
-          <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             CRUST
           </span>
         </div>
       </div>
 
       {/* Categories */}
-      <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+      <nav className="flex-1 overflow-y-auto p-2 space-y-2 text-2xl">
         {categories.map((cat) => {
           const isActive = activeCategory === cat;
 
@@ -66,7 +66,7 @@ export function Sidebar({
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={`
-                w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition
+                w-full text-left px-3 py-2 rounded-lg text-xl font-semibold transition
                 ${
                   isActive
                     ? "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-500"
@@ -87,10 +87,10 @@ export function Sidebar({
             {userName ? userName.substring(0, 2) : '??'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
+            <p className="text-lg font-bold text-slate-900 dark:text-white truncate">
               {userName || 'User'}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+            <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
               {userRole || 'Staff'}
             </p>
           </div>

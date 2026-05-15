@@ -95,7 +95,7 @@ const mergeBills = () => {
             placeholder="Search by Order ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none" />
+            className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none text-lg" />
 
         </div>
 
@@ -105,8 +105,8 @@ const mergeBills = () => {
             key={status}
             onClick={() => setStatusFilter(status as any)}
             className={`
-                px-4 py-2 rounded-lg font-medium transition-colors min-h-[44px]
-                ${statusFilter === status ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'}
+                px-6 py-2 rounded-lg font-bold text-lg transition-all min-h-[44px]
+                ${statusFilter === status ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'}
               `}>
 
               {status}
@@ -128,14 +128,14 @@ const mergeBills = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-sm border-b border-gray-200 dark:border-slate-700">
-               <th className="p-4">Select</th>
-                <th className="p-4 font-medium">Order ID</th>
-                <th className="p-4 font-medium">Date & Time</th>
-                <th className="p-4 font-medium">Type</th>
-                <th className="p-4 font-medium">Total</th>
-                <th className="p-4 font-medium">Status</th>
-                <th className="p-4 font-medium text-right">Actions</th>
+              <tr className="bg-gray-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-lg border-b border-gray-200 dark:border-slate-700">
+               <th className="p-4 font-bold">Select</th>
+                <th className="p-4 font-bold">Order ID</th>
+                <th className="p-4 font-bold">Date & Time</th>
+                <th className="p-4 font-bold">Type</th>
+                <th className="p-4 font-bold">Total</th>
+                <th className="p-4 font-bold">Status</th>
+                <th className="p-4 font-bold text-right">Actions</th>
               </tr>
             </thead>
             
@@ -160,7 +160,7 @@ const mergeBills = () => {
                 </button>
               </td>
 
-                  <td className="p-4 font-medium text-slate-900 dark:text-white">
+                  <td className="p-4 font-bold text-slate-900 dark:text-white text-lg">
                     {order.id}
                   </td>
                   
@@ -172,12 +172,12 @@ const mergeBills = () => {
                   'Takeaway' :
                   `Table ${order.tableNumber}`}
                   </td>
-                  <td className="p-4 font-medium text-slate-900 dark:text-white">
+                  <td className="p-4 font-bold text-slate-900 dark:text-white text-lg">
                     {formatCurrency(order.total)}
                   </td>
                   <td className="p-4">
                     <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-bold
                       ${order.status === 'Completed' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400' : 'bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-400'}
                     `}>
 
@@ -212,7 +212,7 @@ const mergeBills = () => {
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-full max-w-md space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-2xl font-bold">
           Edit Order {editingOrder.id}
         </h2>
         <button onClick={() => setEditingOrder(null)}>✖️</button>

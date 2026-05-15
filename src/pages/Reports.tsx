@@ -67,13 +67,13 @@ const hourlyData = Object.entries(hourlyMap)
   return (
     <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
           Analytics & Reports
         </h2>
         <select
           value={dateRange}
           onChange={(e) => setDateRange(e.target.value)}
-          className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg py-2 px-4 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px]">
+          className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg py-2 px-4 text-lg font-bold text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px]">
 
           <option>Today</option>
           <option>This Week</option>
@@ -85,7 +85,7 @@ const hourlyData = Object.entries(hourlyMap)
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Category Breakdown */}
         <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
             Sales by Category
           </h3>
           <div className="h-80 w-full">
@@ -124,7 +124,7 @@ const hourlyData = Object.entries(hourlyMap)
 
         {/* Hourly Orders */}
         <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
             Order Volume by Hour
           </h3>
           <div className="h-80 w-full">
@@ -150,7 +150,7 @@ const hourlyData = Object.entries(hourlyMap)
                   tickLine={false}
                   tick={{
                     fill: '#64748b',
-                    fontSize: 12
+                    fontSize: 14
                   }}
                   dy={10} />
 
@@ -159,7 +159,7 @@ const hourlyData = Object.entries(hourlyMap)
                   tickLine={false}
                   tick={{
                     fill: '#64748b',
-                    fontSize: 12
+                    fontSize: 14
                   }} />
 
                 <Tooltip

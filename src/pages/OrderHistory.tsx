@@ -193,15 +193,17 @@ const mergeBills = () => {
                   <PrinterIcon className="h-4 w-4" />
                 </button>
 
-                            <button
-                onClick={() => {
-                  if (onEditOrder) onEditOrder(order);
-                }}
-                className="p-2 text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-500/10 rounded-lg transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
-                title="Edit Order"
-              >
-                ✏️
-              </button>
+                            {order.status !== 'Completed' && (
+                              <button
+                                onClick={() => {
+                                  if (onEditOrder) onEditOrder(order);
+                                }}
+                                className="p-2 text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-500/10 rounded-lg transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
+                                title="Edit Order"
+                              >
+                                ✏️
+                              </button>
+                            )}
               </td>
                 </tr>
                 

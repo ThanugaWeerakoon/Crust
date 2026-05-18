@@ -18,6 +18,7 @@ interface POSOrderProps {
     order: Omit<Order, "firestoreId">,
     firestoreId?: string
   ) => void;
+  onDeleteOrder?: (firestoreId: string) => void;
   editingOrder?: Order | null; // optional
   activeCategory: string;
 }
@@ -26,6 +27,7 @@ export function POSOrder({
   menuItems,
   discounts,
   onPlaceOrder,
+  onDeleteOrder,
   editingOrder: propEditingOrder,
   activeCategory
 }: POSOrderProps) {
@@ -251,6 +253,10 @@ export function POSOrder({
 
     onPlaceOrder(order1);
     onPlaceOrder(order2);
+
+    if (propEditingOrder && propEditingOrder.firestoreId && onDeleteOrder) {
+      onDeleteOrder(propEditingOrder.firestoreId);
+    }
 
     setCart([]);
     setSplitQty({});
@@ -549,44 +555,117 @@ export function POSOrder({
       )}
 
       {showSplitModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl w-96 space-y-4">
-            <h2 className="text-lg font-bold">Split Bill</h2>
-
-            {cart.map((item) => (
-              <div key={item.id} className="flex justify-between items-center">
-                <span>
-                  {item.name} ({item.quantity})
-                </span>
-
-                <input
-                  type="number"
-                  min={0}
-                  max={item.quantity}
-                  value={splitQty[item.id] || 0}
-                  onChange={(e) =>
-                    setSplitQty({
-                      ...splitQty,
-                      [item.id]: Number(e.target.value),
-                    })
-                  }
-                  className="w-16 border border-gray-300 dark:border-slate-600 rounded px-2 py-1
-            bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl w-full max-w-2xl space-y-6 shadow-2xl border border-gray-100 dark:border-slate-700 transform transition-all">
+            <div className="flex justify-between items-center border-b border-gray-150 dark:border-slate-700/50 pb-4">
+              <div>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white">Split Bill</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                  Adjust quantities below to split the selected items into a separate bill.
+                </p>
               </div>
-            ))}
+              <button 
+                onClick={() => setShowSplitModal(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              >
+                ✕
+              </button>
+            </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1">
+              {cart.map((item) => {
+                const currentQty = splitQty[item.id] || 0;
+                return (
+                  <div 
+                    key={item.id} 
+                    className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 p-4 bg-gray-50 dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800"
+                  >
+                    <div className="flex-1">
+                      <span className="font-bold text-lg text-slate-900 dark:text-white block">
+                        {item.name}
+                      </span>
+                      <span className="text-sm text-slate-500 dark:text-slate-400">
+                        Original Qty: {item.quantity} | Split Qty: {currentQty}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3 self-end sm:self-auto">
+                      <button
+                        onClick={() =>
+                          setSplitQty({
+                            ...splitQty,
+                            [item.id]: 0,
+                          })
+                        }
+                        disabled={currentQty === 0}
+                        className="px-3 py-2 text-xs font-semibold rounded-lg bg-gray-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
+                      >
+                        Reset
+                      </button>
+
+                      <div className="flex items-center bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+                        <button
+                          onClick={() => {
+                            const newQty = Math.max(0, currentQty - 1);
+                            setSplitQty({
+                              ...splitQty,
+                              [item.id]: newQty,
+                            });
+                          }}
+                          disabled={currentQty <= 0}
+                          className="h-12 w-12 flex items-center justify-center font-bold text-xl text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <MinusIcon className="h-5 w-5" />
+                        </button>
+
+                        <span className="w-12 text-center font-black text-xl text-slate-900 dark:text-white">
+                          {currentQty}
+                        </span>
+
+                        <button
+                          onClick={() => {
+                            const newQty = Math.min(item.quantity, currentQty + 1);
+                            setSplitQty({
+                              ...splitQty,
+                              [item.id]: newQty,
+                            });
+                          }}
+                          disabled={currentQty >= item.quantity}
+                          className="h-12 w-12 flex items-center justify-center font-bold text-xl text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <PlusIcon className="h-5 w-5" />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          setSplitQty({
+                            ...splitQty,
+                            [item.id]: item.quantity,
+                          })
+                        }
+                        disabled={currentQty === item.quantity}
+                        className="px-3 py-2 text-xs font-semibold rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
+                      >
+                        Max
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-4 pt-4 border-t border-gray-150 dark:border-slate-700/50">
               <button
                 onClick={() => setShowSplitModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded dark:bg-red-600"
+                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-bold text-lg active:scale-[0.98] transition-all min-h-[50px] flex items-center justify-center"
               >
                 Cancel
               </button>
 
               <button
                 onClick={handleSplitOrder}
-                className="px-4 py-2 bg-purple-500 text-white rounded"
+                className="flex-1 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-purple-600/20 active:scale-[0.98] transition-all min-h-[50px] flex items-center justify-center"
               >
                 Split Bill
               </button>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { db, auth } from "../firebase";
-import { collection, getDocs, addDoc, updateDoc, doc, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
 
 // Pages
@@ -168,6 +168,19 @@ export function App() {
   };
 
   // -------------------------------
+  // Delete Order Handler
+  // -------------------------------
+  const handleDeleteOrder = async (firestoreId: string) => {
+    try {
+      await deleteDoc(doc(db, "orders", firestoreId));
+      setOrders(prev => prev.filter(o => o.firestoreId !== firestoreId));
+      setEditingOrder(null);
+    } catch (error) {
+      console.error("Error deleting order:", error);
+    }
+  };
+
+  // -------------------------------
   // Edit Order from OrderHistory
   // -------------------------------
   const handleEditOrder = (order: Order) => {
@@ -189,6 +202,7 @@ export function App() {
             menuItems={menuItems}
             discounts={discounts}
             onPlaceOrder={handlePlaceOrder}
+            onDeleteOrder={handleDeleteOrder}
             editingOrder={editingOrder}
              activeCategory={activeCategory}
           />
@@ -204,6 +218,7 @@ export function App() {
             menuItems={menuItems}
             discounts={discounts}
             onPlaceOrder={handlePlaceOrder}
+            onDeleteOrder={handleDeleteOrder}
             editingOrder={editingOrder}
              activeCategory={activeCategory}
           />

@@ -1,4 +1,4 @@
-
+import { useState } from 'react';
 import { Order } from '../types';
 import {
   BanknoteIcon,
@@ -20,6 +20,7 @@ interface DashboardProps {
   orders: Order[];
 }
 export function Dashboard({ orders }: DashboardProps) {
+  const [serviceChargeFilter, setServiceChargeFilter] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const today = new Date().toISOString().split('T')[0];
   const todaysOrders = orders.filter(
     (o) => o.date.startsWith(today) && o.status !== 'Refunded'
@@ -38,8 +39,25 @@ export function Dashboard({ orders }: DashboardProps) {
     maximumFractionDigits: 0
   })}`;
 
-  const totalServiceCharges = orders
-    .filter((o) => o.status === 'Completed')
+  const filteredServiceCharges = orders
+    .filter((o) => {
+      if (o.status !== 'Completed') return false;
+      const orderDate = new Date(o.date);
+      const now = new Date();
+      if (serviceChargeFilter === 'daily') {
+        const todayStr = now.toISOString().split('T')[0];
+        return o.date.startsWith(todayStr);
+      } else if (serviceChargeFilter === 'weekly') {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(now.getDate() - 7);
+        return orderDate >= sevenDaysAgo;
+      } else if (serviceChargeFilter === 'monthly') {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(now.getDate() - 30);
+        return orderDate >= thirtyDaysAgo;
+      }
+      return true;
+    })
     .reduce((sum, o) => sum + (o.tax || 0), 0);
 
 
@@ -101,11 +119,12 @@ export function Dashboard({ orders }: DashboardProps) {
     bg: 'bg-purple-100 dark:bg-purple-500/10'
   },
   {
-    label: 'Total Service Charges',
-    value: formatCurrency(totalServiceCharges),
+    label: 'Service Charges',
+    value: formatCurrency(filteredServiceCharges),
     icon: PercentIcon,
     color: 'text-rose-500',
-    bg: 'bg-rose-100 dark:bg-rose-500/10'
+    bg: 'bg-rose-100 dark:bg-rose-500/10',
+    isInteractive: true
   }];
 
 
@@ -147,13 +166,26 @@ const chartData = Array.from({ length: 7 }).map((_, index) => {
 
                 <Icon className="h-6 w-6" />
               </div>
-              <div>
-                <p className="text-base font-medium text-slate-500 dark:text-slate-400">
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-medium text-slate-500 dark:text-slate-400 truncate">
                   {stat.label}
                 </p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                <p className="text-3xl font-bold text-slate-900 dark:text-white mt-0.5">
                   {stat.value}
                 </p>
+                {stat.isInteractive && (
+                  <div className="mt-2">
+                    <select
+                      value={serviceChargeFilter}
+                      onChange={(e) => setServiceChargeFilter(e.target.value as any)}
+                      className="text-xs font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700/50 rounded-lg px-2.5 py-1 text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-rose-500 cursor-pointer w-fit"
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+                )}
               </div>
             </div>);
 

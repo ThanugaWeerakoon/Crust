@@ -188,7 +188,7 @@ export function POSOrder({
     };
 
     // send order to App.tsx → OrderHistory
-    onPlaceOrder(orderData);
+    onPlaceOrder(orderData, propEditingOrder?.firestoreId);
 
     // clear cart
     setCart([]);
